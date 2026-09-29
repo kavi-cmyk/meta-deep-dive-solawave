@@ -177,6 +177,7 @@ h2{margin:0;font-family:var(--font-display);font-size:clamp(2.2rem,5.4vw,4.6rem)
 .ac-verify a:hover{background:var(--cobalt);color:var(--ink);border-color:var(--cobalt);}
 .ac-verify a::before{content:"\2197 ";}
 #endurance .ac-rank{background:var(--lime);}
+#likes .ac-rank{background:var(--magenta);}
 .board-note{margin:0 0 14px;max-width:860px;font-family:var(--font-mono);font-size:10px;line-height:1.6;color:var(--paper-dim);text-transform:uppercase;letter-spacing:.02em;border:1px dashed var(--line-strong);padding:13px 15px;}
 .board-note strong{color:var(--paper);}
 .board-note code{font-family:var(--font-mono);font-size:.9em;background:oklch(18% 0.018 282 / 0.06);padding:1px 5px;border-radius:3px;overflow-wrap:anywhere;}
@@ -279,13 +280,14 @@ h2{margin:0;font-family:var(--font-display);font-size:clamp(2.2rem,5.4vw,4.6rem)
         <li><a href="#play"><span class="n">02</span><span class="ttl">How Solawave plays<small>Product · strategy · funnel</small></span></a></li>
         <li><a href="#winners"><span class="n">03</span><span class="ttl">The winners right now<small>Top ads · top pages</small></span></a></li>
         <li><a href="#board"><span class="n">04</span><span class="ttl">Top 25 by impressions<small>Meta · as of 29 Sep</small></span></a></li>
-        <li><a href="#endurance"><span class="n">05</span><span class="ttl">The endurance cohort<small>Longest-running 10</small></span></a></li>
-        <li><a href="#offer"><span class="n">06</span><span class="ttl">Offer architecture<small>The 146-day sale</small></span></a></li>
-        <li><a href="#message"><span class="n">07</span><span class="ttl">The message map<small>Four arguments</small></span></a></li>
-        <li><a href="#audience"><span class="n">08</span><span class="ttl">Who they buy<small>Personas · emotions</small></span></a></li>
-        <li><a href="#pages"><span class="n">09</span><span class="ttl">Landing pages<small>35 destinations</small></span></a></li>
-        <li><a href="#plan"><span class="n">10</span><span class="ttl">The 90-day plan<small>Six plays</small></span></a></li>
-        <li><a href="#method"><span class="n">11</span><span class="ttl">Method &amp; limits<small>What this is not</small></span></a></li>
+        <li><a href="#likes"><span class="n">05</span><span class="ttl">Top by AdSpy likes<small>Engagement · 16 ads</small></span></a></li>
+        <li><a href="#endurance"><span class="n">06</span><span class="ttl">The endurance cohort<small>Longest-running 10</small></span></a></li>
+        <li><a href="#offer"><span class="n">07</span><span class="ttl">Offer architecture<small>The 146-day sale</small></span></a></li>
+        <li><a href="#message"><span class="n">08</span><span class="ttl">The message map<small>Four arguments</small></span></a></li>
+        <li><a href="#audience"><span class="n">09</span><span class="ttl">Who they buy<small>Personas · emotions</small></span></a></li>
+        <li><a href="#pages"><span class="n">10</span><span class="ttl">Landing pages<small>35 destinations</small></span></a></li>
+        <li><a href="#plan"><span class="n">11</span><span class="ttl">The 90-day plan<small>Six plays</small></span></a></li>
+        <li><a href="#method"><span class="n">12</span><span class="ttl">Method &amp; limits<small>What this is not</small></span></a></li>
       </ol>
     </nav>
 
@@ -418,9 +420,53 @@ h2{margin:0;font-family:var(--font-display);font-size:clamp(2.2rem,5.4vw,4.6rem)
       </section>
 
       <!-- 05 -->
+      <section class="section" id="likes" style="--accent:var(--magenta)">
+        <div class="section-head">
+          <p class="section-label">05 · Engagement · AdSpy likes</p>
+          <h2>What people actually like</h2>
+          <p class="section-lead">The same account, sorted by the reactions people leave rather than the impressions Meta serves. AdSpy returned <strong>16 Solawave ads</strong> seen between 1 July and 30 September 2026, not 25. Together they carry <strong>4,418 likes and 1,081 comments</strong>, and the two leaders alone take 54% of the likes.</p>
+          <p class="runstamp">AdSpy search “solawave” (text + advertiser) · seen 1 Jul – 30 Sep 2026 · ordered by total likes</p>
+        </div>
+
+        <div class="statrow">
+          <div class="st"><b>16</b><small>Ads returned by AdSpy</small></div>
+          <div class="st"><b class="hot">54%</b><small>Likes held by the top two</small></div>
+          <div class="st"><b>11 / 16</b><small>Carry BOGO in headline, copy or link</small></div>
+          <div class="st"><b class="hot">0</b><small>Top-two copy in Meta's top 25</small></div>
+          <div class="st"><b>640</b><small>Comments on the #1 ad</small></div>
+        </div>
+
+        <div class="gridhead"><span class="gh-t">Ranked by AdSpy total likes · <b>16 creatives · 5 video, 11 image · 13 Facebook, 3 Instagram</b></span></div>
+        <div class="cardgrid" id="likes-grid"></div>
+
+        <div class="finding magenta">
+          <span class="f-tag">Finding · opportunity</span>
+          <h3>The most-liked copy isn't in the impression leaders</h3>
+          <p>The two most-liked ads — 1,303 and 1,100 likes — and the ninth all run the same body copy: <em>“Want smoother, younger-feeling skin without the cost of in-office laser treatments?”</em>, a benefit list, the LightBoost Topicals cross-sell and a named dermatologist quote from <strong>Daniel Gould, MD, PhD</strong>. It is the only copy in either list that puts a doctor's name on the claim. None of the 25 current impression leaders in section 04 runs it.</p>
+          <p>Likes build up over an ad's lifetime and these two have been seen for 90 and 98 days, so part of the gap is age. But the account's delivery has moved almost entirely onto the short BOGO block while its best-engaged copy sits outside the top of the pool. It is the cheapest test in this report: put the doctor-quote body back on the current BOGO creatives and compare.</p>
+          <p class="ev"><strong>Evidence</strong> — AdSpy #1 (1,303 likes, 640 comments, seen 1 Jun – 30 Aug), #2 (1,100 likes, seen 1 Jun – 7 Sep), #9 (127 likes, seen 8 – 23 Sep). Doctor-quote copy on 0 of the 25 highest-impression active ads on 29 Sep.</p>
+        </div>
+
+        <div class="finding cobalt">
+          <span class="f-tag">Finding · watch</span>
+          <h3>“Replace the appointment” wins likes without a discount</h3>
+          <p>Four of the sixteen most-liked ads (#8, #10, #15, #16) carry message 02 from section 08 — <em>“You shouldn't have to book 3 months out…”</em> — with a 60-day guarantee and <strong>no BOGO anywhere in the ad</strong>. All four are video, all four were first seen in July–September, and #8 reached 144 likes in 13 days of observation. This copy has no ad in Meta's current top 25.</p>
+          <p>It is the only non-discount message in the account showing organic pull, and it fits the evergreen, guarantee-led rung proposed in the 90-day plan.</p>
+          <p class="ev"><strong>Evidence</strong> — #8 Instagram video 144 likes (27 Aug – 9 Sep) · #10 Facebook video 98 likes (27 Aug – 9 Sep) · #15 Instagram video 13 likes, landing on /why-both-masks · #16 Facebook video 11 likes.</p>
+        </div>
+
+        <div class="finding yellow">
+          <span class="f-tag">Finding · watch</span>
+          <h3>Two BOGO ads draw one comment for every two likes</h3>
+          <p>The #1 ad has 640 comments against 1,303 likes and #6 has 88 against 167, about one comment per two likes. Across the other fourteen ads the ratio stays at or below one in five, and #2, with the same copy as #1, sits at 0.15. A thread that heavy on a discount ad often means questions, complaints or price objections rather than praise. The comments themselves weren't captured, so this is a flag to read those two threads, not a verdict on them.</p>
+          <p class="ev"><strong>Evidence</strong> — Comments ÷ likes: #6 0.53 · #1 0.49 · #11 0.21 · #4 0.20 · #10 0.16 · #2 0.15 · all others ≤ 0.11.</p>
+        </div>
+      </section>
+
+      <!-- 06 -->
       <section class="section" id="endurance" style="--accent:var(--lime)">
         <div class="section-head">
-          <p class="section-label">05 · The endurance cohort</p>
+          <p class="section-label">06 · The endurance cohort</p>
           <h2>What they keep paying for</h2>
           <p class="section-lead">Impression rank shows what the account pushed that week — on 10 September the live top twenty was entirely the BOGO wave launched 8 September, all of it two days old. The more useful cut is endurance: the creatives Solawave has renewed longest. <strong>Both sorts land in the same place.</strong></p>
         </div>
@@ -463,7 +509,7 @@ h2{margin:0;font-family:var(--font-display);font-size:clamp(2.2rem,5.4vw,4.6rem)
       <!-- 06 -->
       <section class="section" id="offer" style="--accent:var(--coral)">
         <div class="section-head">
-          <p class="section-label">06 · Offer architecture</p>
+          <p class="section-label">07 · Offer architecture</p>
           <h2>The offer does all the work</h2>
           <p class="section-lead">Discount messaging appears on 522 of 1,386 ads — ahead of every proof format the brand owns.</p>
         </div>
@@ -508,7 +554,7 @@ h2{margin:0;font-family:var(--font-display);font-size:clamp(2.2rem,5.4vw,4.6rem)
       <!-- 07 -->
       <section class="section" id="message" style="--accent:var(--cobalt)">
         <div class="section-head">
-          <p class="section-label">07 · The message map</p>
+          <p class="section-label">08 · The message map</p>
           <h2>Four messages, thirteen hundred ads</h2>
           <p class="section-lead">Strip the permutations and Solawave is running four arguments. Each is well written. Together they cover a narrow slice of why someone buys a $399 LED mask.</p>
         </div>
@@ -573,7 +619,7 @@ FDA-cleared · 726,000+ customers · 60-day guarantee
       <!-- 08 -->
       <section class="section" id="audience" style="--accent:var(--magenta)">
         <div class="section-head">
-          <p class="section-label">08 · Who they buy</p>
+          <p class="section-label">09 · Who they buy</p>
           <h2>One woman, described five ways</h2>
           <p class="section-lead">The top five personas account for 1,651 tags. Every genuinely distinct audience — the time-poor professional, the value shopper, the health optimiser — sits in the tail, at a 12:1 ratio.</p>
         </div>
@@ -616,7 +662,7 @@ FDA-cleared · 726,000+ customers · 60-day guarantee
       <!-- 09 -->
       <section class="section" id="pages" style="--accent:var(--yellow)">
         <div class="section-head">
-          <p class="section-label">09 · Landing pages</p>
+          <p class="section-label">10 · Landing pages</p>
           <h2>Where 1,386 ads send people</h2>
           <p class="section-lead">Thirty-five distinct destinations. Three matter. The first absorbs three-quarters of all traffic through four different URLs; the second carries a Black Friday slug in September; the third is a dead Labor Day deployment still serving a contradictory offer.</p>
         </div>
@@ -659,7 +705,7 @@ FDA-cleared · 726,000+ customers · 60-day guarantee
           <span class="f-tag">LP 03 · critical</span>
           <h3>The Labor Day page launched early, ran one day, still serves the wrong offer</h3>
           <p>All 18 ads pointing at <code>get.solawave.co/labor-day-sale-2026-red-light-therapy</code> launched on 5 September 2026 — two days ahead of the holiday. Each records roughly one day of run time. Their ranks land between 33 and 127 in pools of 147 to 168, so this cohort sat in the bottom half of the account for its entire life while the BOGO wave launched three days later took every one of the top nineteen slots.</p>
-          <p>The page is orphaned: the account pivoted to BOGO on 8 September, but these ads still carry “🚨 30% OFF + FREE GIFT” and still show active. This is the offer conflict in section 06, and the fix is a five-minute pause rather than a strategy change.</p>
+          <p>The page is orphaned: the account pivoted to BOGO on 8 September, but these ads still carry “🚨 30% OFF + FREE GIFT” and still show active. This is the offer conflict in section 07, and the fix is a five-minute pause rather than a strategy change.</p>
           <p class="ev"><strong>Evidence</strong> — 18 ads, all start_date 2026-09-05, all days_running 1, all status active as of 2026-09-10. Best rank in cohort 33/168; worst 127/168. Labor Day 2026 fell on 7 September.</p>
         </div>
 
@@ -674,7 +720,7 @@ FDA-cleared · 726,000+ customers · 60-day guarantee
       <!-- 10 -->
       <section class="section" id="plan" style="--accent:var(--lime)">
         <div class="section-head">
-          <p class="section-label">10 · The plan</p>
+          <p class="section-label">11 · The plan</p>
           <h2>Ninety days, no extra production</h2>
           <p class="section-lead">Solawave already makes enough creative. Every play redirects existing capacity rather than asking for more, and each names the number it should move.</p>
         </div>
@@ -744,7 +790,7 @@ FDA-cleared · 726,000+ customers · 60-day guarantee
       <!-- 11 -->
       <section class="section" id="method" style="--accent:var(--cobalt)">
         <div class="section-head">
-          <p class="section-label">11 · Method</p>
+          <p class="section-label">12 · Method</p>
           <h2>Method &amp; limits</h2>
           <p class="section-lead">Every figure here comes from ads Solawave ran publicly on Meta between 13 June and 10 September 2026, observed through the Meta Ad Library and enriched with Atria's creative tagging. The window covers 1,386 live ads against an all-time library of 12,016.</p>
         </div>
@@ -757,7 +803,7 @@ FDA-cleared · 726,000+ customers · 60-day guarantee
           <div class="def">
             <p class="dnum">02 — How the cohort was ranked</p>
             <h3>Endurance, not engagement</h3>
-            <p>Section 05 ranks ads by <strong>continuous observed run length</strong> among creatives active between 1 May and 10 Sep 2026, deduplicated to one row per distinct creative. Run length stands in for endurance because renewal is the advertiser's own verdict on a creative. <strong>Per-ad like, comment and share counts are not available through this source</strong>, so no engagement figure is quoted anywhere on this page. Ranking the same window by delivery weight instead returns the 8 September BOGO wave — a different list, the same conclusion.</p>
+            <p>Section 06 ranks ads by <strong>continuous observed run length</strong> among creatives active between 1 May and 10 Sep 2026, deduplicated to one row per distinct creative. Run length stands in for endurance because renewal is the advertiser's own verdict on a creative. <strong>Per-ad like, comment and share counts are not available through this source</strong>, so no engagement figure is quoted anywhere on this page. Ranking the same window by delivery weight instead returns the 8 September BOGO wave — a different list, the same conclusion.</p>
           </div>
           <div class="def">
             <p class="dnum">03 — What the data is not</p>
@@ -770,12 +816,17 @@ FDA-cleared · 726,000+ customers · 60-day guarantee
             <p>Ad images and video files are loaded directly from <code>cdn.tryatria.com</code> rather than copied into this site. If the CDN is unreachable or a file has expired, the card shows a placeholder and keeps its links to the creative and its Meta Ad Library entry. <strong>38 assets</strong> are referenced — 4 videos with posters, 30 statics.</p>
           </div>
           <div class="def">
-            <p class="dnum">05 — Typography</p>
+            <p class="dnum">05 — Engagement data</p>
+            <h3>Likes are lifetime, not per day</h3>
+            <p>Section 05 comes from an AdSpy search for “solawave” (ad text and advertiser), seen between 1 July and 30 September 2026 and sorted by total likes, captured from a logged-in AdSpy session. The search returned <strong>16 ads, not 25</strong>. Likes, comments and shares are cumulative totals on the Facebook or Instagram post, so older ads have had longer to collect them. “Seen” dates are AdSpy's first and last observation, not Meta's launch and end dates. Media is loaded from <code>content.adspy.com</code> and may not display outside an AdSpy session.</p>
+          </div>
+          <div class="def">
+            <p class="dnum">06 — Typography</p>
             <h3>PP Mori substituted</h3>
             <p>This page is built to the reference deep-dive's design system. <strong>PP Mori</strong> is a commercial Pangram Pangram face that is not on Google Fonts and could not be fetched here, so <strong>Archivo</strong> stands in at the same weights. “PP Mori” remains first in every font stack — self-host the two <code>.otf</code> files and the page picks them up with no other change. Space Mono is the reference face exactly.</p>
           </div>
           <div class="def">
-            <p class="dnum">06 — Reference</p>
+            <p class="dnum">07 — Reference</p>
             <h3>Design lineage</h3>
             <p>Palette, type scale, layout grid and component set are replicated from the Spacegoods / Rosabella Meta deep-dive template: oklch warm-ivory ground with coral, cobalt, lime, yellow and magenta section accents; 1,380px shell; sticky numbered run-order rail; per-section accent inheritance.</p>
           </div>
@@ -851,6 +902,298 @@ const endurance = [
  {r:10, id:"m979776775033990", hl:"Buy One, Get One FREE ✨", fmt:"Image", img:"m979776775033990_MARPMSBR59g.jpeg", run:"94 d", rank:"5 / 120", from:"5 Jun", dest:"browser flag", note:"Self-care routine framing, three-minute sessions.", copy:BOGO_S}
 ];
 
+// AdSpy search "solawave" (text + advertiser), seen 1 Jul – 30 Sep 2026, ordered by total likes. 16 results returned.
+const likes = [
+{
+"r": 1,
+"net": "Facebook",
+"hl": "Buy One, Get One FREE ✨",
+"fmt": "Image · Facebook",
+"imgUrl": "https://content.adspy.com/9CRf0ZbYBNZl0cYZ.jpg",
+"vidUrl": null,
+"copy": "Want smoother, younger-feeling skin without the cost of in-office laser treatments? ✨ Our award-winning Solawave devices use dermatologist-backed light therapy to help: • Support natural collagen production • Soften the appearance of fine lines and wrinkles • Improve skin texture, tone, and overall radiance Safe for daily use ✅ Pain-free experience ✅ Real, at-home results without downtime ✅ Enhance every session with LightBoost Topicals — clinically formulated to amplify your light therapy and visibly reduce signs of aging even faster. ⭐️⭐️⭐️⭐️⭐️ “Solawave gives patients an easy and effective way to continue benefiting from red light therapy at home.” — Daniel Gould, MD, PhD",
+"link": "Solawave’s BIGGEST SALE EVER is here ✨ Buy One, Get One FREE on our award-winning skincare tools. Treat yourself, or gift someone you love, and see visibly brighter, healthier-looking skin in as little as 2 weeks ✨🏃‍♀️",
+"likes": "1,303",
+"comments": "640",
+"shares": "180",
+"seen": "Jun 1 – Aug 30",
+"days": 90,
+"dest": "/products/wrinkle-retreat-pro-red-light-therapy-led-face-mask-infrared-fda-cleared",
+"post": "https://www.facebook.com/100064442899239/posts/1447995067358576",
+"adspy": "https://app.adspy.com/ads/1447995067358576"
+},
+{
+"r": 2,
+"net": "Facebook",
+"hl": "BIGGEST SALE OF THE YEAR",
+"fmt": "Image · Facebook",
+"imgUrl": "https://content.adspy.com/DtKeiYZxlvef6H2Q.jpg",
+"vidUrl": null,
+"copy": "Want smoother, younger-feeling skin without the cost of in-office laser treatments? ✨ Our award-winning Solawave devices use dermatologist-backed light therapy to help: • Support natural collagen production • Soften the appearance of fine lines and wrinkles • Improve skin texture, tone, and overall radiance Safe for daily use ✅ Pain-free experience ✅ Real, at-home results without downtime ✅ Enhance every session with LightBoost Topicals — clinically formulated to amplify your light therapy and visibly reduce signs of aging even faster. ⭐️⭐️⭐️⭐️⭐️ “Solawave gives patients an easy and effective way to continue benefiting from red light therapy at home.” — Daniel Gould, MD, PhD",
+"link": "🚨 OUR BIGGEST SALE EVER — LIVE NOW 🚨 Buy One, Get One FREE on our best-selling LED Face Mask and skincare tools. This is the easiest way to glow brighter, lift your skin, and give someone you love the gift of real results ✨",
+"likes": "1,100",
+"comments": "166",
+"shares": "98",
+"seen": "Jun 1 – Sep 7",
+"days": 98,
+"dest": null,
+"post": "https://www.facebook.com/100064442899239/posts/1447995047358578",
+"adspy": "https://app.adspy.com/ads/1447995047358578"
+},
+{
+"r": 3,
+"net": "Instagram",
+"hl": "Instagram post",
+"fmt": "Video · Instagram",
+"imgUrl": "https://content.adspy.com/sxeKdnykjVdRe2O4.jpg",
+"vidUrl": "https://content.adspy.com/xpeFc8domyIew4mr.mp4",
+"copy": "You've tried the serums. The facials. The $90 eye creams that promised everything and delivered nothing. Here's the difference: Solawave uses 320 high-power LEDs across 4 wavelengths. The same red light technology your dermatologist uses. FDA-cleared. 3 minutes a day. Right now: Buy One, Get One Free. One for you, one for a friend. Not happy after 60 days? Full refund. No questions. Stop renting results. Start owning them.",
+"link": null,
+"likes": "546",
+"comments": "33",
+"shares": null,
+"seen": "Aug 26 – Sep 14",
+"days": 19,
+"dest": null,
+"post": "https://www.instagram.com/p/DcgQHk0sdg5/",
+"adspy": "https://app.adspy.com/ads/DcgQHk0sdg5"
+},
+{
+"r": 4,
+"net": "Facebook",
+"hl": "Buy One, Get One FREE ✨",
+"fmt": "Image · Facebook",
+"imgUrl": "https://content.adspy.com/ERJXHozBq9Q8Ogxt.jpg",
+"vidUrl": null,
+"copy": "🚨 OUR BIGGEST SALE EVER — LIVE NOW 🚨 Buy One, Get One FREE on our best-selling LED Face Mask and skincare tools. This is the easiest way to glow brighter, lift your skin, and give someone you love the gift of real results ✨",
+"link": "Solawave is an FDA-cleared red light therapy brand offering LED face masks, wands & topicals that visibly reduce wrinkles, dark spots, and acne at home.",
+"likes": "342",
+"comments": "67",
+"shares": "14",
+"seen": "Jun 19 – Sep 11",
+"days": 84,
+"dest": null,
+"post": "https://www.facebook.com/100064442899239/posts/1464628709028545",
+"adspy": "https://app.adspy.com/ads/1464628709028545"
+},
+{
+"r": 5,
+"net": "Facebook",
+"hl": "Buy One, Get One FREE ✨",
+"fmt": "Image · Facebook",
+"imgUrl": "https://content.adspy.com/ptwifJ32HEMElx2S.jpg",
+"vidUrl": null,
+"copy": "Solawave’s BIGGEST SALE EVER is here ✨ Buy One, Get One FREE on our award-winning skincare tools. Treat yourself, or gift someone you love, and see visibly brighter, healthier-looking skin in as little as 2 weeks ✨🏃‍♀️",
+"link": "OUR BIGGEST SALE EVER IS HAPPENING RIGHT NOW! Buy One, Get One FREE Our award-winning skincare tools are officially on SALE. Double your glow or gift the second device to someone who deserves great skin.",
+"likes": "226",
+"comments": "15",
+"shares": "8",
+"seen": "Jun 1 – Aug 11",
+"days": 71,
+"dest": null,
+"post": "https://www.facebook.com/100064442899239/posts/1447995057358577",
+"adspy": "https://app.adspy.com/ads/1447995057358577"
+},
+{
+"r": 6,
+"net": "Facebook",
+"hl": "Buy One, Get One FREE ✨",
+"fmt": "Image · Facebook",
+"imgUrl": "https://content.adspy.com/mgvunlsZKXHp0bsB.jpg",
+"vidUrl": null,
+"copy": "🚨 OUR BIGGEST SALE EVER — LIVE NOW 🚨 Buy One, Get One FREE on our best-selling LED Face Mask and skincare tools. This is the easiest way to glow brighter, lift your skin, and give someone you love the gift of real results ✨",
+"link": "Solawave's Wrinkle Retreat Pro Flexible LED Face Mask uses 320 LEDs across 4 wavelengths to reduce wrinkles in just 3 minutes. FDA-cleared, 60-day guarantee.",
+"likes": "167",
+"comments": "88",
+"shares": "15",
+"seen": "Jun 19 – Aug 13",
+"days": 55,
+"dest": null,
+"post": "https://www.facebook.com/100064442899239/posts/1464280325730050",
+"adspy": "https://app.adspy.com/ads/1464280325730050"
+},
+{
+"r": 7,
+"net": "Facebook",
+"hl": "Buy One, Get One FREE ✨",
+"fmt": "Image · Facebook",
+"imgUrl": "https://content.adspy.com/IMPPn0BfOmL7VlmX.jpg",
+"vidUrl": null,
+"copy": "🚨 OUR BIGGEST SALE EVER — LIVE NOW 🚨 Buy One, Get One FREE on our best-selling LED Face Mask and skincare tools. This is the easiest way to glow brighter, lift your skin, and give someone you love the gift of real results ✨",
+"link": "Reduce wrinkles and boost radiance with Solawave’s red light therapy mask. This LED face mask uses red light therapy to smooth and brighten skin. Shop now.",
+"likes": "153",
+"comments": "17",
+"shares": "12",
+"seen": "Apr 17 – Jul 10",
+"days": 84,
+"dest": null,
+"post": "https://www.facebook.com/100064442899239/posts/1409304131227670",
+"adspy": "https://app.adspy.com/ads/1409304131227670"
+},
+{
+"r": 8,
+"net": "Instagram",
+"hl": "Instagram post",
+"fmt": "Video · Instagram",
+"imgUrl": "https://content.adspy.com/DGwLs4SbJvzvhAIJ.jpg",
+"vidUrl": "https://content.adspy.com/AyDxuQXzLqp5LVcI.mp4",
+"copy": "You shouldn't have to book 3 months out just to feel good in your own skin. The Solawave Wrinkle Retreat Pro brings the same red light therapy technology trusted by dermatologists — into your bathroom, your schedule, your hands. 3 minutes. FDA-cleared. 320 LEDs targeting fine lines, texture, and tone while you have your morning coffee. One device. Unlimited sessions. No waiting rooms. Try it risk-free for 60 days — or your money back.",
+"link": null,
+"likes": "144",
+"comments": "11",
+"shares": null,
+"seen": "Aug 27 – Sep 9",
+"days": 13,
+"dest": "/products/wrinkle-retreat-pro-red-light-therapy-led-face-mask-infrared-fda-cleared",
+"post": "https://www.instagram.com/p/DchnNrKsH7x/",
+"adspy": "https://app.adspy.com/ads/DchnNrKsH7x"
+},
+{
+"r": 9,
+"net": "Facebook",
+"hl": "Buy One, Get One FREE ✨",
+"fmt": "Image · Facebook",
+"imgUrl": "https://content.adspy.com/sFwG0gisoleVRuPP.jpg",
+"vidUrl": null,
+"copy": "Want smoother, younger-feeling skin without the cost of in-office laser treatments? ✨ Our award-winning Solawave devices use dermatologist-backed light therapy to help: • Support natural collagen production • Soften the appearance of fine lines and wrinkles • Improve skin texture, tone, and overall radiance Safe for daily use ✅ Pain-free experience ✅ Real, at-home results without downtime ✅ Enhance every session with LightBoost Topicals — clinically formulated to amplify your light therapy and visibly reduce signs of aging even faster. ⭐️⭐️⭐️⭐️⭐️ “Solawave gives patients an easy and effective way to continue benefiting from red light therapy at home.” — Daniel Gould, MD, PhD",
+"link": "🚨 OUR BIGGEST SALE EVER — LIVE NOW 🚨 Buy One, Get One FREE on our best-selling LED Face Mask and skincare tools. This is the easiest way to glow brighter, lift your skin, and give someone you love the gift of real results ✨",
+"likes": "127",
+"comments": "10",
+"shares": "7",
+"seen": "Sep 8 – Sep 23",
+"days": 15,
+"dest": null,
+"post": "https://www.facebook.com/100064442899239/posts/1536806655144083",
+"adspy": "https://app.adspy.com/ads/1536806655144083"
+},
+{
+"r": 10,
+"net": "Facebook",
+"hl": "5-Star Results. 3-Minute Sessions.",
+"fmt": "Video · Facebook",
+"imgUrl": "https://content.adspy.com/k63Qf9fbi8avVoHF.jpg",
+"vidUrl": "https://content.adspy.com/GKlYFJt3TxLDfzgT.mp4",
+"copy": "You shouldn't have to book 3 months out just to feel good in your own skin. The Solawave Wrinkle Retreat Pro brings the same red light therapy technology trusted by dermatologists — into your bathroom, your schedule, your hands. 3 minutes. FDA-cleared. 320 LEDs targeting fine lines, texture, and tone while you have your morning coffee. One device. Unlimited sessions. No waiting rooms. Try it risk-free for 60 days — or your money back.",
+"link": "60-Day Money-Back Guarantee",
+"likes": "98",
+"comments": "16",
+"shares": "4",
+"seen": "Aug 27 – Sep 9",
+"days": 13,
+"dest": "/products/wrinkle-retreat-pro-red-light-therapy-led-face-mask-infrared-fda-cleared",
+"post": "https://www.facebook.com/100064442899239/posts/1525193596305389",
+"adspy": "https://app.adspy.com/ads/1525193596305389"
+},
+{
+"r": 11,
+"net": "Facebook",
+"hl": "Buy One, Get One FREE ✨",
+"fmt": "Image · Facebook",
+"imgUrl": "https://content.adspy.com/9r2dplRsMW9b5Ff9.jpg",
+"vidUrl": null,
+"copy": "🚨 OUR BIGGEST SALE EVER — LIVE NOW 🚨 Buy One, Get One FREE on our best-selling LED Face Mask and skincare tools. This is the easiest way to glow brighter, lift your skin, and give someone you love the gift of real results ✨",
+"link": "Solawave is an FDA-cleared red light therapy brand offering LED face masks, wands & topicals that visibly reduce wrinkles, dark spots, and acne at home.",
+"likes": "86",
+"comments": "18",
+"shares": "5",
+"seen": "Jun 30 – Aug 7",
+"days": 38,
+"dest": "/",
+"post": "https://www.facebook.com/100064442899239/posts/1474086478082768",
+"adspy": "https://app.adspy.com/ads/1474086478082768"
+},
+{
+"r": 12,
+"net": "Facebook",
+"hl": "Wrinkle Retreat Pro LED Face Mask with Red, Infrared, Deep Red, and Amber Light Therapy",
+"fmt": "Image · Facebook",
+"imgUrl": "https://content.adspy.com/BK0UgzosgbtZGY2p.jpg",
+"vidUrl": null,
+"copy": "",
+"link": "Solawave's FDA-cleared LED red light therapy mask uses 320 LEDs across 4 wavelengths to reduce wrinkles in 3 minutes. Free returns. 60-day guarantee.",
+"likes": "58",
+"comments": "0",
+"shares": "1",
+"seen": "Aug 7 – Aug 12",
+"days": 5,
+"dest": null,
+"post": "https://www.facebook.com/100064442899239/posts/1507253591432723",
+"adspy": "https://app.adspy.com/ads/1507253591432723"
+},
+{
+"r": 13,
+"net": "Facebook",
+"hl": "BIGGEST SALE OF THE YEAR",
+"fmt": "Image · Facebook",
+"imgUrl": "https://content.adspy.com/YAiNSqroY5PKBZT5.jpg",
+"vidUrl": null,
+"copy": "OUR BIGGEST SALE EVER IS HAPPENING RIGHT NOW! Buy One, Get One FREE Our award-winning skincare tools are officially on SALE. Double your glow or gift the second device to someone who deserves great skin.",
+"link": "Solawave’s BIGGEST SALE EVER is here ✨ Buy One, Get One FREE on our award-winning skincare tools. Treat yourself, or gift someone you love, and see visibly brighter, healthier-looking skin in as little as 2 weeks ✨🏃‍♀️",
+"likes": "23",
+"comments": "0",
+"shares": null,
+"seen": "Jun 1 – Jul 11",
+"days": 40,
+"dest": null,
+"post": "https://www.facebook.com/100064442899239/posts/1447995087358574",
+"adspy": "https://app.adspy.com/ads/1447995087358574"
+},
+{
+"r": 14,
+"net": "Facebook",
+"hl": "Buy One, Get One FREE ✨",
+"fmt": "Image · Facebook",
+"imgUrl": "https://content.adspy.com/SvGlWd2iB4GplhXi.jpg",
+"vidUrl": null,
+"copy": "🚨 OUR BIGGEST SALE EVER — LIVE NOW 🚨 Buy One, Get One FREE on our best-selling LED Face Mask and skincare tools. This is the easiest way to glow brighter, lift your skin, and give someone you love the gift of real results ✨",
+"link": "Solawave's FDA-cleared LED red light therapy mask uses 320 LEDs across 4 wavelengths to reduce wrinkles in 3 minutes. Free returns. 60-day guarantee.",
+"likes": "21",
+"comments": "0",
+"shares": "1",
+"seen": "Sep 8 – Sep 19",
+"days": 11,
+"dest": null,
+"post": "https://www.facebook.com/100064442899239/posts/1536806931810722",
+"adspy": "https://app.adspy.com/ads/1536806931810722"
+},
+{
+"r": 15,
+"net": "Instagram",
+"hl": "Instagram post",
+"fmt": "Video · Instagram",
+"imgUrl": "https://content.adspy.com/JPwNK7LRXlqJVcs4.jpg",
+"vidUrl": "https://content.adspy.com/OSD30eYLbwStFlTs.mp4",
+"copy": "You shouldn't have to book 3 months out just to feel good in your own skin. The Solawave Wrinkle Retreat Pro brings the same red light therapy technology trusted by dermatologists — into your bathroom, your schedule, your hands. 3 minutes. FDA-cleared. 320 LEDs targeting fine lines, texture, and tone while you have your morning coffee. One device. Unlimited sessions. No waiting rooms. Try it risk-free for 60 days — or your money back.",
+"link": null,
+"likes": "13",
+"comments": "0",
+"shares": null,
+"seen": "Sep 8 – Sep 14",
+"days": 6,
+"dest": "get.solawave.co/why-both-masks",
+"post": "https://www.instagram.com/p/DdC1T_sMyOD/",
+"adspy": "https://app.adspy.com/ads/DdC1T_sMyOD"
+},
+{
+"r": 16,
+"net": "Facebook",
+"hl": "Try Everything Else? Try This Risk-Free.",
+"fmt": "Video · Facebook",
+"imgUrl": "https://content.adspy.com/o3JMJmu00xxq7A7b.jpg",
+"vidUrl": "https://content.adspy.com/1OwRPtEd9KF3RcD4.mp4",
+"copy": "You shouldn't have to book 3 months out just to feel good in your own skin. The Solawave Wrinkle Retreat Pro brings the same red light therapy technology trusted by dermatologists — into your bathroom, your schedule, your hands. 3 minutes. FDA-cleared. 320 LEDs targeting fine lines, texture, and tone while you have your morning coffee. One device. Unlimited sessions. No waiting rooms. Try it risk-free for 60 days — or your money back.",
+"link": "60-Day Money-Back Guarantee",
+"likes": "11",
+"comments": "0",
+"shares": null,
+"seen": "Jul 7 – Jul 15",
+"days": 8,
+"dest": null,
+"post": "https://www.facebook.com/100064442899239/posts/1480995894058493",
+"adspy": "https://app.adspy.com/ads/1480995894058493"
+}
+];
+
 function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
 
 function mediaFail(el){
@@ -873,7 +1216,37 @@ function playVid(btn){
   btn.remove();
 }
 
+function likesCard(a){
+  const isVid = !!a.vidUrl;
+  const links = [
+    a.imgUrl ? '<a href="'+esc(a.imgUrl)+'" target="_blank" rel="noopener">'+(isVid?"Poster":"Image")+'</a>' : "",
+    isVid ? '<a href="'+esc(a.vidUrl)+'" target="_blank" rel="noopener">MP4</a>' : "",
+    a.post ? '<a href="'+esc(a.post)+'" target="_blank" rel="noopener">'+esc(a.net)+' post</a>' : "",
+    a.adspy ? '<a href="'+esc(a.adspy)+'" target="_blank" rel="noopener">AdSpy</a>' : ""
+  ].filter(Boolean).join("");
+  const copy = a.copy
+    ? '<p class="ac-copy">'+esc(a.copy)+'</p>'
+    : '<p class="ac-copy empty">No body copy on record for this ad.</p>';
+  const linkDesc = a.link ? '<p class="ac-themes">Link: '+esc(a.link)+'</p>' : "";
+  const meta = '<span><em>Likes</em>'+esc(a.likes)+'</span><span><em>Comments</em>'+esc(a.comments)+'</span><span><em>Shares</em>'+esc(a.shares==null?"—":a.shares)+'</span>'
+    + '<span><em>Seen</em>'+esc(a.seen)+' · '+a.days+' d</span>'
+    + (a.dest ? '<span><em>Dest</em>'+esc(a.dest)+'</span>' : "");
+  return '<article class="card" id="adspy-'+a.r+'">'
+    + '<span class="ac-rank">'+String(a.r).padStart(2,"0")+'</span>'
+    + '<div class="ac-media">'
+      + (a.imgUrl ? '<img src="'+esc(a.imgUrl)+'" alt="'+esc(a.hl)+'" loading="lazy" decoding="async" onerror="mediaFail(this)">' : "")
+      + (isVid ? '<button type="button" class="ac-play" aria-label="Play video" data-vid="'+esc(a.vidUrl)+'" onclick="playVid(this)"><span>▶</span></button>' : "")
+      + '<span class="ac-fmt">'+esc(a.fmt)+'</span></div>'
+    + '<div class="ac-body">'
+      + '<p class="ac-headline">'+esc(a.hl)+'</p>'
+      + copy + linkDesc
+      + '<div class="ac-meta">'+meta+'</div>'
+      + '<div class="ac-verify">'+links+'</div>'
+    + '</div></article>';
+}
+
 function card(a, mode){
+  if (mode === "likes") return likesCard(a);
   const isVid = !!a.vid;
   const links = [
     '<a href="'+CDN+a.img+'" target="_blank" rel="noopener">'+(isVid?"Poster":"Image")+'</a>',
@@ -906,6 +1279,7 @@ function card(a, mode){
 }
 
 document.getElementById("board-grid").innerHTML = board.map(function(a){return card(a,"board");}).join("");
+document.getElementById("likes-grid").innerHTML = likes.map(likesCard).join("");
 document.getElementById("endurance-grid").innerHTML = endurance.map(function(a){return card(a,"endurance");}).join("");
 </script>
 

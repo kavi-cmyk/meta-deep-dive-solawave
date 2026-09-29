@@ -157,6 +157,10 @@ h2{margin:0;font-family:var(--font-display);font-size:clamp(2.2rem,5.4vw,4.6rem)
 .ac-media{display:block;width:100%;border-bottom:1px solid var(--line);position:relative;aspect-ratio:1/1;overflow:hidden;background:oklch(18% 0.018 282 / 0.05);max-width:100%;}
 .ac-media img{width:100%;height:100%;object-fit:cover;}
 .ac-noimg{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:7px;text-align:center;font-family:var(--font-mono);font-size:9px;text-transform:uppercase;color:var(--paper-dim);line-height:1.4;padding:14px;}
+.ac-media video{width:100%;height:100%;object-fit:cover;background:#000;}
+.ac-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;border:0;padding:0;background:transparent;cursor:pointer;}
+.ac-play span{display:flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:50%;background:oklch(18% 0.018 282 / 0.72);color:var(--ink);font-size:18px;padding-left:3px;}
+.ac-play:hover span{background:var(--coral);}
 .ac-noimg .ni-glyph{font-size:22px;color:var(--line-strong);}
 .ac-fmt{position:absolute;bottom:8px;right:8px;font-family:var(--font-mono);font-size:8.5px;text-transform:uppercase;color:var(--paper);background:oklch(97% 0.012 78 / 0.82);backdrop-filter:blur(6px);padding:2px 7px;border-radius:4px;border:1px solid var(--line);}
 .ac-body{padding:13px 14px;display:flex;flex-direction:column;gap:8px;flex:1;}
@@ -407,7 +411,7 @@ h2{margin:0;font-family:var(--font-display);font-size:clamp(2.2rem,5.4vw,4.6rem)
           <h2>Top active ads</h2>
           <p class="section-lead">The twenty highest-impression live creatives on 10 September 2026, in rank order. Read the headline on each card top to bottom: the account is running one message.</p>
         </div>
-        <p class="board-note"><strong>Creative files not embedded.</strong> This session's network egress proxy blocks <code>cdn.tryatria.com</code>, so the image and video files could not be downloaded and published with this page. Every card links to its creative and its Meta Ad Library entry. Run <code>fetch-solawave-creative.sh</code> and the 38 assets drop straight into these slots.</p>
+        <p class="board-note"><strong>Creative loads from source.</strong> Images and video posters load directly from <code>cdn.tryatria.com</code>; click a video poster to play the MP4. If a file is unavailable, the card falls back to a placeholder — every card still links to its creative and its Meta Ad Library entry.</p>
         <div class="gridhead"><span class="gh-t">Ranked by current impression position · <b>20 creatives · 4 video, 15 image, 1 carousel</b></span></div>
         <div class="cardgrid" id="board-grid"></div>
       </section>
@@ -760,9 +764,9 @@ FDA-cleared · 726,000+ customers · 60-day guarantee
             <p>No spend, revenue, ROAS, CAC or conversion figure here is observed — none of it is public. Claims about margin and offer economics are inference from observed creative behaviour and should be checked against Solawave's own ad-account data before budget moves. Landing-page commentary is drawn from the URLs, slugs and the ad copy pointing at them; <strong>the pages themselves were not crawled</strong> — solawave.co is blocked by this session's network egress proxy.</p>
           </div>
           <div class="def">
-            <p class="dnum">04 — Missing assets</p>
-            <h3>Creative files pending</h3>
-            <p>The image and video files are hosted on <code>cdn.tryatria.com</code>, which this session's egress proxy also blocks, so they could not be downloaded and published with this page. Every ad card links to its creative and its Meta Ad Library entry. The accompanying <code>fetch-solawave-creative.sh</code> pulls all <strong>38 assets</strong> — 4 videos with posters, 30 statics — from any machine with normal access.</p>
+            <p class="dnum">04 — Creative assets</p>
+            <h3>Hotlinked, not hosted</h3>
+            <p>Ad images and video files are loaded directly from <code>cdn.tryatria.com</code> rather than copied into this site. If the CDN is unreachable or a file has expired, the card shows a placeholder and keeps its links to the creative and its Meta Ad Library entry. <strong>38 assets</strong> are referenced — 4 videos with posters, 30 statics.</p>
           </div>
           <div class="def">
             <p class="dnum">05 — Typography</p>
@@ -835,6 +839,26 @@ const endurance = [
 
 function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
 
+function mediaFail(el){
+  const box = el.closest(".ac-media");
+  if(!box || box.dataset.failed) return;
+  box.dataset.failed = "1";
+  const vid = !!box.querySelector(".ac-play,video");
+  box.querySelectorAll("img,video,.ac-play").forEach(function(n){n.remove();});
+  box.insertAdjacentHTML("afterbegin",'<div class="ac-noimg"><span class="ni-glyph">'+(vid?"▶":"▣")+'</span><span>'+(vid?"Video unavailable":"Image unavailable")+'</span><span style="opacity:.72">Open the links below</span></div>');
+}
+
+function playVid(btn){
+  const box = btn.closest(".ac-media");
+  const img = box.querySelector("img");
+  const v = document.createElement("video");
+  v.src = btn.dataset.vid; v.controls = true; v.autoplay = true; v.playsInline = true;
+  if(img) v.poster = img.src;
+  v.onerror = function(){ mediaFail(v); };
+  if(img) img.replaceWith(v); else box.prepend(v);
+  btn.remove();
+}
+
 function card(a, mode){
   const isVid = !!a.vid;
   const links = [
@@ -855,11 +879,10 @@ function card(a, mode){
 
   return '<article class="card" id="ad-'+a.id+'">'
     + '<span class="ac-rank">'+String(a.r).padStart(2,"0")+'</span>'
-    + '<div class="ac-media"><div class="ac-noimg">'
-      + '<span class="ni-glyph">'+(isVid?"▶":"▣")+'</span>'
-      + '<span>'+(isVid?"Video not embedded":"Image not embedded")+'</span>'
-      + '<span style="opacity:.72">CDN blocked · open below</span>'
-    + '</div><span class="ac-fmt">'+esc(a.fmt)+'</span></div>'
+    + '<div class="ac-media">'
+      + '<img src="'+CDN+a.img+'" alt="'+esc(a.hl)+'" loading="lazy" decoding="async" onerror="mediaFail(this)">'
+      + (isVid ? '<button type="button" class="ac-play" aria-label="Play video" data-vid="'+CDN+a.vid+'" onclick="playVid(this)"><span>▶</span></button>' : '')
+      + '<span class="ac-fmt">'+esc(a.fmt)+'</span></div>'
     + '<div class="ac-body">'
       + '<p class="ac-headline">'+esc(a.hl)+'</p>'
       + note + copy + themes

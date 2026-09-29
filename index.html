@@ -1,0 +1,875 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Solawave Meta creative deep-dive: 1,386 live ads, 13 Jun – 10 Sep 2026.">
+<style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+<title>Solawave Meta Deep-Dive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap">
+<style>
+:root{
+  color-scheme:light;
+  --ink:oklch(97.3% 0.013 78);
+  --ink-soft:oklch(94.2% 0.018 78);
+  --paper:oklch(18% 0.018 282);
+  --paper-dim:oklch(36% 0.022 282);
+  --coral:oklch(60% 0.19 31);
+  --cobalt:oklch(52% 0.17 257);
+  --lime:oklch(58% 0.16 142);
+  --yellow:oklch(70% 0.16 80);
+  --magenta:oklch(56% 0.20 334);
+  --line:oklch(18% 0.018 282 / 0.16);
+  --line-strong:oklch(18% 0.018 282 / 0.32);
+  --accent:var(--coral);
+  --font-display:"PP Mori","Archivo",Arial Narrow,system-ui,sans-serif;
+  --font-body:"PP Mori","Archivo",Arial Narrow,system-ui,sans-serif;
+  --font-mono:"Space Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;overflow-x:clip;}
+body{
+  margin:0;min-height:100vh;overflow-x:clip;
+  background:
+    radial-gradient(circle at 8% -2%, oklch(82% 0.05 28 / 0.10), transparent 36rem),
+    radial-gradient(circle at 96% 6%, oklch(86% 0.024 92 / 0.16), transparent 32rem),
+    linear-gradient(180deg, oklch(97.8% 0.011 78) 0%, var(--ink) 46%, var(--ink-soft) 100%);
+  color:var(--paper);font-family:var(--font-body);-webkit-font-smoothing:antialiased;
+}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.022;
+  background-image:linear-gradient(to right,var(--paper) 1px,transparent 1px),linear-gradient(to bottom,var(--paper) 1px,transparent 1px);
+  background-size:88px 88px;mask-image:linear-gradient(to bottom,oklch(18% 0.018 282 / 0.55),transparent 82%);}
+a{color:inherit;text-decoration:none;}
+img{display:block;max-width:100%;}
+.shell{position:relative;z-index:1;width:min(100%,1380px);margin:0 auto;padding:18px clamp(16px,3vw,44px) 56px;}
+
+/* topbar */
+.topbar{position:sticky;top:0;z-index:30;display:flex;justify-content:space-between;align-items:center;gap:18px;padding:14px 0;isolation:isolate;flex-wrap:wrap;}
+.topbar::before{content:"";position:absolute;z-index:-1;top:0;bottom:0;left:50%;width:100vw;transform:translateX(-50%);background:oklch(97.3% 0.013 78 / 0.74);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid oklch(18% 0.018 282 / 0.1);}
+.brandmark{display:flex;align-items:center;gap:11px;}
+.brandmark .bm-txt{font-family:var(--font-mono);font-size:10px;line-height:1.2;text-transform:uppercase;color:var(--paper-dim);}
+.brandmark .bm-txt strong{display:block;color:var(--paper);font-size:12px;letter-spacing:.04em;}
+.topbar .tb-tag{font-family:var(--font-mono);font-size:10px;text-transform:uppercase;color:var(--paper-dim);}
+.bm-logo{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;border:1px solid var(--line-strong);background:var(--accent);color:var(--ink);font-family:var(--font-display);font-weight:650;font-size:12px;letter-spacing:-.02em;flex:none;}
+.hl-logo{display:flex;align-items:center;justify-content:center;width:64px;height:64px;border-radius:50%;border:1px solid var(--line-strong);background:var(--accent);color:var(--ink);font-family:var(--font-display);font-weight:650;font-size:22px;flex:none;}
+
+/* layout */
+.layout{display:grid;grid-template-columns:minmax(204px,236px) minmax(0,1fr);gap:clamp(28px,4vw,58px);align-items:start;}
+.content{min-width:0;}
+.sidenav{position:sticky;top:70px;align-self:start;max-height:calc(100vh - 90px);overflow-y:auto;padding-right:4px;}
+.sidenav-h{font-family:var(--font-mono);font-size:10px;text-transform:uppercase;color:var(--paper-dim);letter-spacing:.06em;margin:0 0 6px;}
+.runorder{list-style:none;margin:0;padding:0;border-top:1px solid var(--line);}
+.runorder li{border-bottom:1px solid var(--line);}
+.runorder a{display:grid;grid-template-columns:24px 1fr;gap:9px;align-items:baseline;padding:9px 8px 9px 0;color:var(--paper);line-height:1.25;border-left:2px solid transparent;transition:background .12s;}
+.runorder a:hover{background:oklch(60% 0.19 31 / 0.06);}
+.runorder a .n{font-family:var(--font-mono);font-size:10px;color:var(--coral);padding-left:8px;}
+.runorder a .ttl{font-size:.95rem;}
+.runorder a small{display:block;font-family:var(--font-mono);font-size:8.5px;color:var(--paper-dim);text-transform:uppercase;margin-top:2px;}
+
+/* hero */
+.hero{padding:clamp(16px,2.5vw,32px) 0 clamp(24px,3vw,40px);}
+.hero-logo{display:flex;align-items:center;gap:16px;margin-bottom:22px;}
+.hero-logo .hl-name{font-family:var(--font-display);font-weight:650;font-size:1.5rem;text-transform:uppercase;letter-spacing:-.01em;}
+.hero-logo .hl-sub{font-family:var(--font-mono);font-size:10px;text-transform:uppercase;color:var(--paper-dim);margin-top:2px;}
+.kicker{font-family:var(--font-mono);font-size:11px;line-height:1.45;color:var(--paper-dim);text-transform:uppercase;display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
+.kicker span{border:1px solid var(--line);padding:7px 10px;border-radius:6px;color:var(--paper);background:oklch(98% 0.012 78 / 0.55);}
+h1{margin:0;font-family:var(--font-display);font-size:clamp(2.8rem,6.6vw,6.2rem);font-weight:650;line-height:.85;letter-spacing:-.01em;text-transform:uppercase;}
+.title-line{display:block;}
+.intro{max-width:680px;margin:24px 0 0;font-size:clamp(1.02rem,1.5vw,1.22rem);line-height:1.55;color:var(--paper-dim);}
+.intro strong{color:var(--paper);}
+
+/* section */
+.section{border-top:1px solid var(--line-strong);padding:clamp(34px,5vw,68px) 0 clamp(18px,3vw,36px);scroll-margin-top:84px;}
+.section-head{display:grid;gap:13px;margin-bottom:clamp(22px,3vw,36px);}
+.section-label{font-family:var(--font-mono);font-size:11px;color:var(--accent);text-transform:uppercase;margin:0;letter-spacing:.05em;}
+h2{margin:0;font-family:var(--font-display);font-size:clamp(2.2rem,5.4vw,4.6rem);line-height:.9;text-transform:uppercase;letter-spacing:-.01em;font-weight:650;max-width:18ch;}
+.section-sub{margin:13px 0 0;max-width:40ch;font-family:var(--font-display);font-size:clamp(1.1rem,1.7vw,1.5rem);line-height:1.22;color:var(--paper);font-weight:650;letter-spacing:-.01em;}
+.section-lead{margin:12px 0 0;max-width:780px;font-size:clamp(1rem,1.4vw,1.18rem);line-height:1.55;color:var(--paper-dim);}
+.section-lead strong{color:var(--paper);}
+.runstamp{margin:10px 0 0;font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--paper-dim);display:inline-flex;align-items:center;gap:7px;}
+.runstamp::before{content:"\25D4";color:var(--accent);font-size:12px;}
+
+/* stat row */
+.statrow{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin:clamp(18px,2.4vw,26px) 0 0;}
+.statrow .st{background:var(--ink);padding:16px 14px;}
+.statrow .st b{display:block;font-family:var(--font-display);font-size:clamp(1.5rem,2.6vw,2.4rem);line-height:1;font-weight:650;}
+.statrow .st b.hot{color:var(--coral);}
+.statrow .st small{display:block;font-family:var(--font-mono);font-size:9px;text-transform:uppercase;color:var(--paper-dim);margin-top:7px;letter-spacing:.04em;line-height:1.35;}
+
+/* scorecard */
+.scoregrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(196px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin-top:clamp(18px,2.4vw,26px);}
+.sc{background:var(--ink);padding:16px 15px;display:flex;flex-direction:column;gap:9px;}
+.sc-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;}
+.sc-name{font-family:var(--font-mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--paper-dim);}
+.sc-val{font-family:var(--font-display);font-weight:650;font-size:1.5rem;line-height:1;}
+.sc-track{height:4px;background:oklch(18% 0.018 282 / 0.09);position:relative;}
+.sc-track i{position:absolute;inset:0 auto 0 0;}
+.sc p{margin:0;font-size:.82rem;line-height:1.4;color:var(--paper-dim);}
+.sc.bad .sc-val{color:var(--coral);}.sc.bad .sc-track i{background:var(--coral);}
+.sc.mid .sc-val{color:var(--yellow);}.sc.mid .sc-track i{background:var(--yellow);}
+.sc.ok .sc-val{color:var(--lime);}.sc.ok .sc-track i{background:var(--lime);}
+
+/* overview defs */
+.defs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin-top:clamp(18px,2.4vw,26px);}
+.def{background:var(--ink);padding:clamp(18px,2.4vw,26px);}
+.def .dnum{font-family:var(--font-mono);font-size:10px;color:var(--accent);text-transform:uppercase;margin:0;}
+.def h3{margin:4px 0 0;font-family:var(--font-display);font-size:clamp(1.3rem,2vw,1.8rem);text-transform:uppercase;font-weight:650;line-height:1;}
+.def p{color:var(--paper-dim);line-height:1.5;font-size:.95rem;margin:12px 0 0;}
+.def p strong{color:var(--paper);}
+.def code{font-family:var(--font-mono);font-size:.8em;background:oklch(18% 0.018 282 / 0.06);padding:1px 5px;border-radius:3px;overflow-wrap:anywhere;}
+
+/* winners */
+.winners{display:grid;grid-template-columns:1.4fr 1fr;gap:clamp(18px,2.4vw,28px);margin-top:clamp(18px,2.4vw,26px);}
+@media (max-width:900px){.winners{grid-template-columns:1fr;}}
+.panel{border:1px solid var(--line-strong);background:var(--ink);}
+.panel-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap;}
+.panel-head .ph-t{font-family:var(--font-display);font-weight:650;font-size:1.15rem;text-transform:uppercase;}
+.win-list,.lp-slots{display:flex;flex-direction:column;}
+.win{display:grid;grid-template-columns:30px 1fr;gap:13px;align-items:start;padding:12px 16px;border-bottom:1px solid var(--line);transition:background .12s;}
+.win:last-child{border-bottom:0;}
+.win:hover{background:oklch(60% 0.19 31 / 0.06);}
+.win:hover .win-adv{color:var(--coral);}
+.win-rank{font-family:var(--font-mono);font-size:15px;font-weight:700;color:var(--coral);}
+.win-adv{margin:0;font-family:var(--font-display);font-weight:650;font-size:.98rem;line-height:1.05;}
+.win-copy{margin:5px 0 0;font-size:.82rem;line-height:1.35;color:var(--paper-dim);}
+.win-metric{margin:6px 0 0;font-family:var(--font-mono);font-size:9.5px;text-transform:uppercase;color:var(--paper-dim);line-height:1.4;}
+.win-metric strong{color:var(--paper);font-size:11px;}
+.lp-badge{font-family:var(--font-mono);font-size:9px;text-transform:uppercase;letter-spacing:.04em;color:var(--ink);background:var(--yellow);padding:3px 8px;border-radius:999px;}
+.lp-slot{display:grid;grid-template-columns:30px 1fr;gap:13px;align-items:start;padding:13px 16px;border-bottom:1px solid var(--line);}
+.lp-slot:last-child{border-bottom:0;}
+.lp-slot .lp-rank{font-family:var(--font-mono);font-size:15px;font-weight:700;color:var(--yellow);}
+.lp-info{min-width:0;}
+.lp-url{display:block;font-family:var(--font-mono);font-size:.78rem;color:var(--cobalt);overflow-wrap:anywhere;line-height:1.3;}
+.lp-sub{margin:5px 0 0;font-family:var(--font-mono);font-size:8.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--paper-dim);}
+.lp-metric{margin:5px 0 0;font-family:var(--font-mono);font-size:9.5px;text-transform:uppercase;color:var(--paper-dim);line-height:1.4;}
+.lp-metric strong{color:var(--paper);}
+.lp-note{padding:12px 16px;border-top:1px solid var(--line);font-family:var(--font-mono);font-size:9.5px;line-height:1.5;color:var(--paper-dim);text-transform:uppercase;margin:0;}
+
+/* ad grid */
+.gridhead{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin:clamp(20px,2.6vw,30px) 0 14px;flex-wrap:wrap;}
+.gridhead .gh-t{font-family:var(--font-mono);font-size:11px;text-transform:uppercase;color:var(--paper-dim);letter-spacing:.05em;}
+.gridhead .gh-t b{color:var(--accent);font-weight:400;}
+.cardgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(252px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);}
+.card{background:var(--ink);display:flex;flex-direction:column;position:relative;scroll-margin-top:96px;}
+.ac-rank{position:absolute;top:8px;left:8px;z-index:2;font-family:var(--font-mono);font-size:11px;font-weight:700;color:var(--ink);background:var(--coral);padding:2px 7px;border-radius:4px;}
+.ac-media{display:block;width:100%;border-bottom:1px solid var(--line);position:relative;aspect-ratio:1/1;overflow:hidden;background:oklch(18% 0.018 282 / 0.05);max-width:100%;}
+.ac-media img{width:100%;height:100%;object-fit:cover;}
+.ac-noimg{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:7px;text-align:center;font-family:var(--font-mono);font-size:9px;text-transform:uppercase;color:var(--paper-dim);line-height:1.4;padding:14px;}
+.ac-noimg .ni-glyph{font-size:22px;color:var(--line-strong);}
+.ac-fmt{position:absolute;bottom:8px;right:8px;font-family:var(--font-mono);font-size:8.5px;text-transform:uppercase;color:var(--paper);background:oklch(97% 0.012 78 / 0.82);backdrop-filter:blur(6px);padding:2px 7px;border-radius:4px;border:1px solid var(--line);}
+.ac-body{padding:13px 14px;display:flex;flex-direction:column;gap:8px;flex:1;}
+.ac-headline{margin:0;font-family:var(--font-display);font-weight:650;font-size:.95rem;line-height:1.1;}
+.ac-note{margin:0;font-size:.82rem;line-height:1.4;color:var(--paper);}
+.ac-themes{margin:0;font-family:var(--font-mono);font-size:8.5px;text-transform:uppercase;color:var(--paper-dim);line-height:1.45;}
+.ac-copy{margin:0;font-size:.84rem;line-height:1.45;color:var(--paper-dim);white-space:pre-wrap;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:6;-webkit-box-orient:vertical;overflow:hidden;}
+.ac-copy.empty{font-style:italic;opacity:.65;}
+.ac-meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:auto;padding-top:4px;}
+.ac-meta span{font-family:var(--font-mono);font-size:9px;text-transform:uppercase;color:var(--paper);}
+.ac-meta em{display:block;font-style:normal;color:var(--paper-dim);font-size:8px;margin-bottom:2px;}
+.ac-verify{display:flex;flex-wrap:wrap;gap:6px;}
+.ac-verify a{font-family:var(--font-mono);font-size:8px;text-transform:uppercase;letter-spacing:.02em;color:var(--cobalt);border:1px solid oklch(52% 0.17 257 / 0.4);border-radius:4px;padding:3px 6px;line-height:1.2;transition:background .12s,color .12s,border-color .12s;}
+.ac-verify a:hover{background:var(--cobalt);color:var(--ink);border-color:var(--cobalt);}
+.ac-verify a::before{content:"\2197 ";}
+#endurance .ac-rank{background:var(--lime);}
+.board-note{margin:0 0 14px;max-width:860px;font-family:var(--font-mono);font-size:10px;line-height:1.6;color:var(--paper-dim);text-transform:uppercase;letter-spacing:.02em;border:1px dashed var(--line-strong);padding:13px 15px;}
+.board-note strong{color:var(--paper);}
+.board-note code{font-family:var(--font-mono);font-size:.9em;background:oklch(18% 0.018 282 / 0.06);padding:1px 5px;border-radius:3px;overflow-wrap:anywhere;}
+
+/* finding */
+.finding{border:1px solid var(--line-strong);border-left:4px solid var(--accent);background:linear-gradient(180deg,oklch(60% 0.19 31 / 0.06),transparent 55%);padding:clamp(18px,2.6vw,30px);margin-top:clamp(18px,2.4vw,26px);}
+.finding.cobalt{--accent:var(--cobalt);background:linear-gradient(180deg,oklch(52% 0.17 257 / 0.06),transparent 55%);}
+.finding.lime{--accent:var(--lime);background:linear-gradient(180deg,oklch(58% 0.16 142 / 0.07),transparent 55%);}
+.finding.yellow{--accent:var(--yellow);background:linear-gradient(180deg,oklch(70% 0.16 80 / 0.09),transparent 55%);}
+.finding.magenta{--accent:var(--magenta);background:linear-gradient(180deg,oklch(56% 0.20 334 / 0.06),transparent 55%);}
+.finding .f-tag{font-family:var(--font-mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--accent);display:block;margin-bottom:9px;}
+.finding h3{margin:0 0 12px;font-family:var(--font-display);font-weight:650;font-size:clamp(1.25rem,2.2vw,1.9rem);text-transform:uppercase;line-height:1;letter-spacing:-.01em;}
+.finding p{margin:0;max-width:840px;font-size:1.02rem;line-height:1.6;color:var(--paper-dim);}
+.finding p + p{margin-top:13px;}
+.finding p strong{color:var(--paper);}
+.finding code{font-family:var(--font-mono);font-size:.8em;background:oklch(18% 0.018 282 / 0.06);padding:1px 5px;border-radius:3px;overflow-wrap:anywhere;}
+.ev{margin:16px 0 0;padding-top:13px;border-top:1px dashed var(--line-strong);font-family:var(--font-mono);font-size:9.5px;line-height:1.6;text-transform:uppercase;color:var(--paper-dim);max-width:840px;}
+.ev strong{color:var(--paper);}
+
+/* specimen */
+.specimens{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin-top:clamp(18px,2.4vw,26px);}
+.spec{background:var(--ink);padding:18px;display:flex;flex-direction:column;gap:11px;}
+.spec .sp-n{font-family:var(--font-mono);font-size:9.5px;text-transform:uppercase;color:var(--accent);letter-spacing:.05em;}
+.spec .sp-copy{white-space:pre-line;font-size:.92rem;line-height:1.5;color:var(--paper);margin:0;}
+.spec .sp-meta{font-family:var(--font-mono);font-size:9px;text-transform:uppercase;color:var(--paper-dim);line-height:1.5;margin:auto 0 0;padding-top:11px;border-top:1px solid var(--line);}
+
+/* bars */
+.bars{margin-top:clamp(18px,2.4vw,26px);border:1px solid var(--line);background:var(--ink);padding:18px;}
+.bar{display:grid;grid-template-columns:minmax(120px,1.1fr) minmax(0,2.2fr) 88px;gap:13px;align-items:center;padding:7px 0;}
+.bar .bl{font-size:.88rem;line-height:1.25;}
+.bar .bl em{font-style:normal;display:block;font-family:var(--font-mono);font-size:8.5px;text-transform:uppercase;color:var(--paper-dim);margin-top:2px;}
+.bar .bt{height:12px;background:oklch(18% 0.018 282 / 0.07);position:relative;}
+.bar .bt i{position:absolute;inset:0 auto 0 0;background:var(--accent);}
+.bar .bt i.dim{background:oklch(18% 0.018 282 / 0.3);}
+.bar .bt i.coral{background:var(--coral);}
+.bar .bt i.lime{background:var(--lime);}
+.bar .bt i.yellow{background:var(--yellow);}
+.bar .bv{font-family:var(--font-mono);font-size:10px;text-align:right;color:var(--paper-dim);}
+.axis{font-family:var(--font-mono);font-size:9px;text-transform:uppercase;color:var(--paper-dim);margin:12px 0 0;line-height:1.5;}
+@media (max-width:640px){.bar{grid-template-columns:1fr;gap:4px;}.bar .bv{text-align:left;}}
+
+/* table */
+.tblwrap{overflow-x:auto;margin-top:clamp(18px,2.4vw,26px);border:1px solid var(--line);background:var(--ink);}
+.lptable{width:100%;border-collapse:collapse;font-size:.9rem;min-width:640px;}
+.lptable th,.lptable td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top;}
+.lptable tr:last-child td{border-bottom:0;}
+.lptable th{font-family:var(--font-mono);font-size:9.5px;text-transform:uppercase;color:var(--paper-dim);font-weight:400;background:oklch(18% 0.018 282 / 0.035);}
+.lptable td:nth-child(n+2),.lptable th:nth-child(n+2){text-align:right;font-family:var(--font-mono);font-size:11px;}
+.lptable td:first-child{font-family:var(--font-display);font-weight:650;}
+.lptable td .u{display:block;font-family:var(--font-mono);font-size:9px;font-weight:400;color:var(--paper-dim);margin-top:3px;overflow-wrap:anywhere;}
+.pill{font-family:var(--font-mono);font-size:8.5px;text-transform:uppercase;padding:3px 7px;border-radius:999px;white-space:nowrap;color:var(--ink);}
+.pill.bad{background:var(--coral);}
+.pill.warn{background:var(--yellow);}
+.pill.ok{background:var(--lime);}
+
+/* plan */
+.plan{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);margin-top:clamp(18px,2.4vw,26px);}
+.play{background:var(--ink);padding:clamp(18px,2.4vw,24px);}
+.play .pl-when{font-family:var(--font-mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--accent);margin:0;}
+.play h3{margin:6px 0 0;font-family:var(--font-display);font-weight:650;font-size:clamp(1.2rem,1.9vw,1.6rem);text-transform:uppercase;line-height:1.02;}
+.play ul{list-style:none;margin:14px 0 0;padding:0;}
+.play li{position:relative;padding:9px 0 9px 22px;border-top:1px solid var(--line);font-size:.93rem;line-height:1.5;color:var(--paper-dim);}
+.play li strong{color:var(--paper);font-weight:650;}
+.play li::before{content:"\2192";position:absolute;left:0;color:var(--accent);}
+.play .pl-metric{margin:14px 0 0;font-family:var(--font-mono);font-size:9.5px;text-transform:uppercase;color:var(--paper-dim);line-height:1.5;}
+.play .pl-metric strong{color:var(--paper);}
+
+/* footer */
+.footer{border-top:1px solid var(--line-strong);margin-top:clamp(40px,5vw,72px);padding:26px 0 0;display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;font-family:var(--font-mono);font-size:10px;line-height:1.6;color:var(--paper-dim);text-transform:uppercase;}
+.footer div{max-width:46ch;}
+.footer strong{color:var(--paper);}
+
+@media (max-width:940px){
+  .layout{grid-template-columns:1fr;gap:22px;}
+  .sidenav{position:static;max-height:none;overflow:visible;padding-bottom:8px;border-bottom:1px solid var(--line-strong);}
+  .statrow{grid-template-columns:repeat(2,1fr);}
+  .defs{grid-template-columns:1fr;}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}html{scroll-behavior:auto;}}
+:focus-visible{outline:2px solid var(--cobalt);outline-offset:2px;}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <div class="topbar" id="top">
+    <div class="brandmark">
+      <span class="bm-logo">SW</span>
+      <span class="bm-txt"><strong>Solawave</strong>Meta deep-dive</span>
+    </div>
+    <span class="tb-tag">13 Jun – 10 Sep 2026 · 1,386 live ads</span>
+  </div>
+
+  <div class="layout">
+
+    <nav class="sidenav">
+      <p class="sidenav-h">Run order</p>
+      <ol class="runorder">
+        <li><a href="#verdict"><span class="n">01</span><span class="ttl">The verdict<small>Scorecard · 4.0 / 10</small></span></a></li>
+        <li><a href="#play"><span class="n">02</span><span class="ttl">How Solawave plays<small>Product · strategy · funnel</small></span></a></li>
+        <li><a href="#winners"><span class="n">03</span><span class="ttl">The winners right now<small>Top ads · top pages</small></span></a></li>
+        <li><a href="#board"><span class="n">04</span><span class="ttl">Top active ads<small>Live board · 20 creatives</small></span></a></li>
+        <li><a href="#endurance"><span class="n">05</span><span class="ttl">The endurance cohort<small>Longest-running 10</small></span></a></li>
+        <li><a href="#offer"><span class="n">06</span><span class="ttl">Offer architecture<small>The 146-day sale</small></span></a></li>
+        <li><a href="#message"><span class="n">07</span><span class="ttl">The message map<small>Four arguments</small></span></a></li>
+        <li><a href="#audience"><span class="n">08</span><span class="ttl">Who they buy<small>Personas · emotions</small></span></a></li>
+        <li><a href="#pages"><span class="n">09</span><span class="ttl">Landing pages<small>35 destinations</small></span></a></li>
+        <li><a href="#plan"><span class="n">10</span><span class="ttl">The 90-day plan<small>Six plays</small></span></a></li>
+        <li><a href="#method"><span class="n">11</span><span class="ttl">Method &amp; limits<small>What this is not</small></span></a></li>
+      </ol>
+    </nav>
+
+    <main class="content">
+
+      <header class="hero">
+        <div class="hero-logo">
+          <span class="hl-logo">SW</span>
+          <div>
+            <div class="hl-name">Solawave</div>
+            <div class="hl-sub">solawave.co · health &amp; beauty · 32,683 page likes</div>
+          </div>
+        </div>
+        <div class="kicker">
+          <span>Meta creative deep-dive</span>
+          <span>Trailing 90 days</span>
+          <span>1,386 live ads</span>
+          <span>12,016 all-time</span>
+          <span>Meta Ad Library via Atria</span>
+        </div>
+        <h1><span class="title-line">Solawave is</span><span class="title-line">scaling</span><span class="title-line">one ad.</span></h1>
+        <p class="intro">1,386 live ads. <strong>57 pieces of copy.</strong> One offer. Nineteen of the twenty highest-impression ads in the account are the same Buy-One-Get-One-Free promotion, and the “biggest sale ever” carrying them has been live for <strong>146 consecutive days</strong>. This is a teardown of what Solawave actually buys, what endures, and what the top three landing destinations are being asked to do.</p>
+      </header>
+
+      <!-- 01 -->
+      <section class="section" id="verdict" style="--accent:var(--coral)">
+        <div class="section-head">
+          <p class="section-label">01 · The verdict</p>
+          <h2>Scaled, not diversified</h2>
+          <p class="section-sub">Enormous production capacity pointed at a single idea.</p>
+          <p class="section-lead">Solawave is not under-investing in Meta. It ran <strong>1,386 distinct ads</strong> in 90 days across video, static and carousel — output most DTC brands cannot match. The problem sits downstream of production: those 1,386 ads carry 57 pieces of copy, 38 headlines and one offer. The account is scaling reach, not learning.</p>
+          <p class="runstamp">Data as of 10 Sep 2026, 20:24 UTC</p>
+        </div>
+
+        <div class="statrow">
+          <div class="st"><b>1,386</b><small>Ads live in window</small></div>
+          <div class="st"><b class="hot">&minus;38%</b><small>Launch velocity QoQ</small></div>
+          <div class="st"><b class="hot">24.3</b><small>Ads per copy block</small></div>
+          <div class="st"><b>54%</b><small>Video share of output</small></div>
+          <div class="st"><b class="hot">76%</b><small>Traffic to one PDP</small></div>
+        </div>
+
+        <div class="scoregrid">
+          <div class="sc ok"><div class="sc-top"><span class="sc-name">Creative volume</span><span class="sc-val">9</span></div><div class="sc-track"><i style="width:90%"></i></div><p>1,386 live, 1,212 newly launched in-window. Production is a genuine strength.</p></div>
+          <div class="sc bad"><div class="sc-top"><span class="sc-name">Message diversity</span><span class="sc-val">3</span></div><div class="sc-track"><i style="width:30%"></i></div><p>24 ads per unique copy block. Volume is permutation, not testing.</p></div>
+          <div class="sc bad"><div class="sc-top"><span class="sc-name">Offer discipline</span><span class="sc-val">2</span></div><div class="sc-track"><i style="width:20%"></i></div><p>Permanent BOGO, 146 days of “biggest sale ever”, two offers live at once.</p></div>
+          <div class="sc mid"><div class="sc-top"><span class="sc-name">Proof deployment</span><span class="sc-val">4</span></div><div class="sc-track"><i style="width:40%"></i></div><p>726k customers and 4.7 stars, used in 9% of ads.</p></div>
+          <div class="sc bad"><div class="sc-top"><span class="sc-name">Audience breadth</span><span class="sc-val">3</span></div><div class="sc-track"><i style="width:30%"></i></div><p>The top five personas are one woman described five ways.</p></div>
+          <div class="sc bad"><div class="sc-top"><span class="sc-name">Traffic architecture</span><span class="sc-val">3</span></div><div class="sc-track"><i style="width:30%"></i></div><p>35 destinations; one PDP reached through four different URLs.</p></div>
+        </div>
+      </section>
+
+      <!-- 02 -->
+      <section class="section" id="play" style="--accent:var(--cobalt)">
+        <div class="section-head">
+          <p class="section-label">02 · Overview</p>
+          <h2>What Solawave is &amp; how it plays</h2>
+          <p class="section-lead">A red-light-therapy device brand selling a $399 hero product on a permanent two-for-one, through a bank of statics it refreshes less and less often.</p>
+        </div>
+        <div class="defs">
+          <div class="def">
+            <p class="dnum">01 — The product</p>
+            <h3>The hero carries everything</h3>
+            <p>The <strong>Wrinkle Retreat Pro</strong> LED face mask — 320 medical-grade LEDs, four wavelengths (amber 605nm, red 630nm, deep red 660nm, near-infrared 830nm), FDA-cleared, 3-minute sessions. It absorbs <strong>76% of all ad traffic</strong>. Secondary lines — Radiant Renewal Wand, Neck &amp; Chest Pro, Bye Acne — together take under 4%.</p>
+          </div>
+          <div class="def">
+            <p class="dnum">02 — The strategy</p>
+            <h3>Volume over variety</h3>
+            <p>1,212 new ads launched in 90 days against 1,971 the quarter before — a <strong>38% drop in launch velocity</strong> while the live count held. The bank is large and ageing. Across 1,386 ads: 57 distinct copy blocks, 38 headlines, 35 destinations.</p>
+          </div>
+          <div class="def">
+            <p class="dnum">03 — What they push</p>
+            <h3>Speed, clearance, two-for-one</h3>
+            <p>Top USPs by deployment: <strong>3-minute treatment</strong> (517 ads), visible results (343), red light therapy (336), <strong>Buy One Get One Free</strong> (276), FDA-cleared (265), 4 clinic-grade wavelengths (261), hands-free (240), 320 LEDs (219).</p>
+          </div>
+          <div class="def">
+            <p class="dnum">04 — The funnel</p>
+            <h3>Straight to the product page</h3>
+            <p>Almost everything runs <code>ad → PDP → cart</code>. There is no quiz and no advertorial at scale, and the one page built to justify the second unit — <code>get.solawave.co/why-both-masks</code> — carries <strong>six ads</strong> while 466 ads promise a free second mask.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 03 -->
+      <section class="section" id="winners" style="--accent:var(--coral)">
+        <div class="section-head">
+          <p class="section-label">03 · The winners right now</p>
+          <h2>The winners right now</h2>
+          <p class="section-lead">Ranked by current impression position inside Solawave's own pool. Nineteen of the top twenty carry the BOGO offer. The single exception is a benefit-led Radiant Renewal Wand video at rank 2 — the only ad in the leading cohort that sells the product rather than the deal.</p>
+        </div>
+        <div class="winners">
+          <div class="panel">
+            <div class="panel-head"><span class="ph-t">Top ads by impression rank</span><span class="tb-tag">Live · 10 Sep</span></div>
+            <div class="win-list">
+              <div class="win"><span class="win-rank">01</span><div><p class="win-adv">Buy One, Get One FREE ✨</p><p class="win-copy">🚨 OUR BIGGEST SALE EVER — LIVE NOW 🚨 Buy One, Get One FREE on our best-selling LED Face Mask…</p><p class="win-metric">Image · Scarcity + Discount · <strong>1 / 86</strong> · homepage BOGO26</p></div></div>
+              <div class="win"><span class="win-rank">02</span><div><p class="win-adv">Professional Results. Your Schedule.</p><p class="win-copy">What if spa-quality skin treatments could happen during your morning coffee? The Solawave 4-in-1 Wand…</p><p class="win-metric">Video 47s · Partner ad · <strong>2 / 86</strong> · the only non-offer ad in the top 20</p></div></div>
+              <div class="win"><span class="win-rank">03</span><div><p class="win-adv">Buy One, Get One FREE ✨</p><p class="win-copy">Same BOGO block, Features/Benefits treatment.</p><p class="win-metric">Image · <strong>3 / 86</strong> · PDP browser-flag variant</p></div></div>
+              <div class="win"><span class="win-rank">08</span><div><p class="win-adv">Buy One, Get One FREE ✨</p><p class="win-copy">🚨 Our biggest offer of the year is live. 4 wavelengths. 320 LEDs. 3 minutes. Real results.</p><p class="win-metric">Video 21s · <strong>8 / 86</strong> · canonical PDP</p></div></div>
+              <div class="win"><span class="win-rank">16</span><div><p class="win-adv">They Have 132 LEDs. We Have 320.</p><p class="win-copy">You've tried the serums. The facials. The $90 eye creams that promised everything and delivered nothing.</p><p class="win-metric">Video 15s · Comparison · <strong>16 / 86</strong> · Black Friday collection</p></div></div>
+              <div class="win"><span class="win-rank">20</span><div><p class="win-adv">Use Your HSA/FSA. Buy One, Get One.</p><p class="win-copy">You've probably tried something for your neck. A firming cream. A collagen serum applied a little lower…</p><p class="win-metric">Image · Before &amp; after · <strong>20 / 86</strong> · /why-both-masks</p></div></div>
+            </div>
+            <p class="lp-note">19 of the top 20 carry BOGO. Rank 2 is the sole exception.</p>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head"><span class="ph-t">Top destinations</span><span class="lp-badge">35 total</span></div>
+            <div class="lp-slots">
+              <div class="lp-slot"><span class="lp-rank">01</span><div class="lp-info"><span class="lp-url">/products/wrinkle-retreat-pro-red-light-therapy-led-face-mask-infrared-fda-cleared</span><p class="lp-sub">Canonical hero PDP</p><p class="lp-metric"><strong>738 ads</strong> · 53.3% · longest run 80 d</p></div></div>
+              <div class="lp-slot"><span class="lp-rank">02</span><div class="lp-info"><span class="lp-url">/products/wrinkle-retreat-pro-red-light-therapy</span><p class="lp-sub">Same PDP · short slug</p><p class="lp-metric"><strong>142 ads</strong> · 10.2% · longest run 24 d</p></div></div>
+              <div class="lp-slot"><span class="lp-rank">03</span><div class="lp-info"><span class="lp-url">…-fda-cleared?openExternalBrowser=1</span><p class="lp-sub">Same PDP · in-app browser flag</p><p class="lp-metric"><strong>128 ads</strong> · 9.2% · longest run 101 d</p></div></div>
+              <div class="lp-slot"><span class="lp-rank">04</span><div class="lp-info"><span class="lp-url">/collections/black-friday-skincare-deals-red-light-therapy-solawave</span><p class="lp-sub">Deals collection · off-season slug</p><p class="lp-metric"><strong>92 ads</strong> · 6.6% · longest run 41 d</p></div></div>
+              <div class="lp-slot"><span class="lp-rank">05</span><div class="lp-info"><span class="lp-url">get.solawave.co/labor-day-sale-2026-red-light-therapy</span><p class="lp-sub">Labor Day · orphaned</p><p class="lp-metric"><strong>18 ads</strong> · 1.3% · all launched 5 Sep</p></div></div>
+            </div>
+            <p class="lp-note">Rows 1–3 are the same product page under three URL spellings — 1,008 ads. A fourth legacy slug adds 46 more.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 04 -->
+      <section class="section" id="board" style="--accent:var(--coral)">
+        <div class="section-head">
+          <p class="section-label">04 · Live board</p>
+          <h2>Top active ads</h2>
+          <p class="section-lead">The twenty highest-impression live creatives on 10 September 2026, in rank order. Read the headline on each card top to bottom: the account is running one message.</p>
+        </div>
+        <p class="board-note"><strong>Creative files not embedded.</strong> This session's network egress proxy blocks <code>cdn.tryatria.com</code>, so the image and video files could not be downloaded and published with this page. Every card links to its creative and its Meta Ad Library entry. Run <code>fetch-solawave-creative.sh</code> and the 38 assets drop straight into these slots.</p>
+        <div class="gridhead"><span class="gh-t">Ranked by current impression position · <b>20 creatives · 4 video, 15 image, 1 carousel</b></span></div>
+        <div class="cardgrid" id="board-grid"></div>
+      </section>
+
+      <!-- 05 -->
+      <section class="section" id="endurance" style="--accent:var(--lime)">
+        <div class="section-head">
+          <p class="section-label">05 · The endurance cohort</p>
+          <h2>What they keep paying for</h2>
+          <p class="section-lead">Impression rank shows what the account pushed this week — the live top twenty is entirely the BOGO wave launched 8 September, all of it two days old. The more useful cut is endurance: the creatives Solawave has renewed longest. <strong>Both sorts land in the same place.</strong></p>
+        </div>
+        <div class="gridhead"><span class="gh-t">Ranked by continuous run length · <b>10 creatives · all static · 143 d down to 94 d</b></span></div>
+        <div class="cardgrid" id="endurance-grid"></div>
+
+        <div class="finding lime">
+          <span class="f-tag">Finding · new</span>
+          <h3>Video is 54% of output and 0% of the endurance cohort</h3>
+          <p>Solawave produced 753 videos in 90 days against 627 statics. Yet every one of the ten longest-running ads is a static image, and the only video reaching the current top twenty — the Wand spot at rank 2 — launched two days ago and has no track record. Either video is being cut before it can mature, or static is genuinely carrying this account and half the production budget is mispriced.</p>
+          <p>This is answerable from Solawave's own ad account in an afternoon: pull 90-day retention curves by format. If statics survive 3× longer, the production mix is the single largest efficiency lever in the business.</p>
+          <p class="ev"><strong>Evidence</strong> — Media mix across 1,386 live ads: video 753 (54.3%), image 627 (45.2%), carousel 6 (0.4%). Top ten by run length: 10 image, 0 video, 0 carousel.</p>
+        </div>
+
+        <div class="finding">
+          <span class="f-tag">Finding · critical</span>
+          <h3>The most proven creative points at the least-used URL</h3>
+          <p>Six of the ten longest-running ads — including both 143-day leaders and both creator ads — land on <code>/products/wrinkle-retreat-pro-light-therapy-face-mask</code>, the <em>legacy</em> product slug that takes just 46 ads and 3.3% of current traffic. The remaining four point at the <code>?openExternalBrowser=1</code> variant. <strong>Not one ad in the proven cohort points at the canonical FDA-cleared URL</strong> that now carries 738 ads and 53% of the account.</p>
+          <p>The brand's endurance winners and its current volume sit on opposite URLs. Any read of “what converts on the PDP” is comparing two different pages' histories.</p>
+          <p class="ev"><strong>Evidence</strong> — Legacy slug: ads 1–5 and 9 (143 d, 143 d, 133 d, 133 d, 105 d, 97 d). Browser-flag variant: ads 6–8 and 10. Canonical slug: zero of the top ten, 738 of 1,386 live ads.</p>
+        </div>
+
+        <div class="finding lime">
+          <span class="f-tag">Finding · opportunity</span>
+          <h3>The one ad that reached a different audience ran 105 days, then was killed</h3>
+          <p>Ad 5 is the outlier in every dimension. An <code>#ad</code> advertorial, 1,797 characters, opening <em>“Go to your bathroom right now and flip over your ‘clean' moisturizer. Count the ingredients. We'll wait.”</em> — a clean-beauty ingredient argument for women who already filter their water and read every label. It ran from a media partner page with <strong>7.2 million likes</strong>, not Solawave's own. It is the only ad in the cohort tagged to <strong>The Health Optimizer</strong> and the only one carrying Media/Press.</p>
+          <p>It ran 105 days, peaked at rank 26 of 150, and went inactive on 8 August. Nothing replaced it. This was the account's one genuine expansion beyond the beauty-seeker cluster — a persona sitting at 22 tags out of 1,386 — and it is the obvious thing to rebuild, because Solawave already knows it holds for three and a half months.</p>
+          <p class="ev"><strong>Evidence</strong> — Ad <code>m1715053516322806</code>, 105 days, 4 creative duplicates, last seen 2026-08-08, status inactive. Host page industry “media/news company”, 7,242,545 likes.</p>
+        </div>
+
+        <div class="finding cobalt">
+          <span class="f-tag">Finding · watch</span>
+          <h3>Creator ads are house copy with the pronouns swapped</h3>
+          <p>Ads 3 and 4 are partner placements live 133 days — the third- and fourth-longest-running in the account. Their copy is the brand's own BOGO block with “our best-selling” changed to “<strong>their</strong> best-selling”. No creator voice, no personal result, no reason the audience should weigh it differently from the house ad running beside it.</p>
+          <p>Creator inventory that endures 133 days is worth more than a find-and-replace. The endorsement is the asset being paid for and it is the one thing the copy does not contain.</p>
+          <p class="ev"><strong>Evidence</strong> — Ads <code>m868648829597072</code> and <code>m972674411869940</code>, both 133 days from 2026-04-26, 6 creative duplicates each, best ranks 19 and 28 of 74.</p>
+        </div>
+      </section>
+
+      <!-- 06 -->
+      <section class="section" id="offer" style="--accent:var(--coral)">
+        <div class="section-head">
+          <p class="section-label">06 · Offer architecture</p>
+          <h2>The offer does all the work</h2>
+          <p class="section-lead">Discount messaging appears on 522 of 1,386 ads — ahead of every proof format the brand owns.</p>
+        </div>
+
+        <div class="bars">
+          <div class="bar"><span class="bl">Features / benefits</span><span class="bt"><i class="dim" style="width:100%"></i></span><span class="bv">1,044 · 75%</span></div>
+          <div class="bar"><span class="bl">Problem &amp; solution</span><span class="bt"><i class="dim" style="width:70.5%"></i></span><span class="bv">736 · 53%</span></div>
+          <div class="bar"><span class="bl">Promotion / discount</span><span class="bt"><i class="coral" style="width:50%"></i></span><span class="bv">522 · 38%</span></div>
+          <div class="bar"><span class="bl">Before &amp; after</span><span class="bt"><i class="yellow" style="width:17.8%"></i></span><span class="bv">186 · 13%</span></div>
+          <div class="bar"><span class="bl">Comparison<em>vs. rival LED masks</em></span><span class="bt"><i class="yellow" style="width:15.5%"></i></span><span class="bv">162 · 12%</span></div>
+          <div class="bar"><span class="bl">Scarcity</span><span class="bt"><i class="coral" style="width:12.2%"></i></span><span class="bv">127 · 9%</span></div>
+          <div class="bar"><span class="bl">Social proof</span><span class="bt"><i class="yellow" style="width:12.1%"></i></span><span class="bv">126 · 9%</span></div>
+          <div class="bar"><span class="bl">Media / press</span><span class="bt"><i class="dim" style="width:7.8%"></i></span><span class="bv">81 · 6%</span></div>
+          <div class="bar"><span class="bl">Testimonial</span><span class="bt"><i class="yellow" style="width:6.9%"></i></span><span class="bv">72 · 5%</span></div>
+          <p class="axis">Bars scaled to the largest theme (1,044 ads). Shares are of 1,386 live ads; ads carry multiple themes, so shares exceed 100%.</p>
+        </div>
+
+        <div class="finding">
+          <span class="f-tag">Finding · critical</span>
+          <h3>“Our biggest sale ever” has run 146 days</h3>
+          <p>The copy block opening <code>🚨 OUR BIGGEST SALE EVER — LIVE NOW 🚨</code> is the second-most-deployed message in the account and its longest-lived ad has been in market for 146 consecutive days. A sale that never ends is not a sale; it is a price. Every scarcity cue layered on top — “limited time”, “before it ends”, “this offer won't last” — is testable by any returning customer and fails.</p>
+          <p>The cost compounds: prospects who bounce learn that waiting is free, and the account loses its last lever for genuine seasonal peaks. Black Friday is eleven weeks out and Solawave has already spent the word “biggest”.</p>
+          <p class="ev"><strong>Evidence</strong> — Copy block <code>74d7bcc7</code>: 217 ads, longest run 146 days. Near-identical variant <code>4d7c2049</code> adds 51 more. Promotion/discount theme on 522 of 1,386 ads. BOGO named as the USP on 276.</p>
+        </div>
+
+        <div class="finding">
+          <span class="f-tag">Finding · critical</span>
+          <h3>Two contradictory offers are live in the same week</h3>
+          <p>On 5 September the account launched 18 ads promising <strong>“30% OFF + FREE GIFT — sitewide”</strong> pointing at the Labor Day landing page. On 8 September it launched the BOGO wave that now occupies the entire top of the account. Both are still live. A shopper who sees the 30%-off ad, clicks, then retargets into a BOGO ad is being quoted two different prices for the same mask inside 72 hours.</p>
+          <p>Beyond the trust cost, this splits the conversion signal: two offers, two destinations, two sets of learning, neither reaching significance.</p>
+          <p class="ev"><strong>Evidence</strong> — 18 ads launched 2026-09-05 on <code>get.solawave.co/labor-day-sale-2026-red-light-therapy</code>. BOGO wave launched 2026-09-08 across PDP, homepage and collections. Both sets carry status active as of 2026-09-10.</p>
+        </div>
+
+        <div class="finding yellow">
+          <span class="f-tag">Finding · watch</span>
+          <h3>Discounting is the default mechanic, not a peak tactic</h3>
+          <p>Offer-led headlines — “Buy One, Get One FREE ✨”, “Buy One, Get Another FREE”, “Two Masks. One Price. Ends Soon.”, “30% off sitewide” — account for <strong>499 of 1,382 headlined ads (36%)</strong>. The brand-led alternatives Solawave has already written and proven run at similar volume but never reach the top of the impression pool, which suggests budget rather than performance is choosing the winner.</p>
+          <p class="ev"><strong>Evidence</strong> — BOGO ✨ 355 (26%) · Buy One Get Another FREE 111 (8%) · Two Masks One Price 17 · 30% off sitewide 16. Benefit-led: 5-Star Results 299 (22%) · One Habit 245 (18%) · They Have 132 LEDs 135 (10%) · 60-Day Guarantee 46 (3%).</p>
+        </div>
+      </section>
+
+      <!-- 07 -->
+      <section class="section" id="message" style="--accent:var(--cobalt)">
+        <div class="section-head">
+          <p class="section-label">07 · The message map</p>
+          <h2>Four messages, thirteen hundred ads</h2>
+          <p class="section-lead">Strip the permutations and Solawave is running four arguments. Each is well written. Together they cover a narrow slice of why someone buys a $399 LED mask.</p>
+        </div>
+        <div class="specimens">
+          <div class="spec">
+            <p class="sp-n">Message 01 — topicals failed you</p>
+            <p class="sp-copy">You've tried the serums. The facials. The $90 eye creams that promised everything and delivered nothing.
+
+Here's the difference: Solawave uses 320 high-power LEDs across 4 wavelengths. The same red light technology your dermatologist uses. FDA-cleared. 3 minutes a day.
+
+Right now: Buy One, Get One Free. One for you, one for a friend.
+
+Not happy after 60 days? Full refund. No questions.
+
+Stop renting results. Start owning them.</p>
+            <p class="sp-meta">342 ads · 25% · longest run 41 d · the account's most-deployed argument</p>
+          </div>
+          <div class="spec">
+            <p class="sp-n">Message 02 — replace the appointment</p>
+            <p class="sp-copy">You shouldn't have to book 3 months out just to feel good in your own skin.
+
+The Solawave Wrinkle Retreat Pro brings the same red light therapy technology trusted by dermatologists — into your bathroom, your schedule, your hands.
+3 minutes. FDA-cleared. 320 LEDs targeting fine lines, texture, and tone while you have your morning coffee.
+One device. Unlimited sessions. No waiting rooms.
+Try it risk-free for 60 days — or your money back.</p>
+            <p class="sp-meta">227 ads · 16% across two variants · the strongest-written of the four</p>
+          </div>
+          <div class="spec">
+            <p class="sp-n">Message 03 — skeptic conversion</p>
+            <p class="sp-copy">“It's probably just a fancy LED mask.”
+That's what they say. Before week three.
+FDA-cleared. 320 LEDs. 4 wavelengths. 3 minutes.
+60 days to prove it wrong — or your money back.</p>
+            <p class="sp-meta">73 ads · 5% across two variants · highest concept density, lowest deployment</p>
+          </div>
+          <div class="spec">
+            <p class="sp-n">Message 04 — gift the second one</p>
+            <p class="sp-copy">This is the deal your skin (and your best friend's skin) has been waiting for. 🖤
+Limited Time: Buy One Wrinkle Retreat Pro, Get One FREE.
+Mix and match. Gift one. Keep both. Whatever you choose — you're getting clinical-grade red light therapy that visibly reduces fine lines in just 3 minutes a day.
+FDA-cleared · 726,000+ customers · 60-day guarantee
+→ Shop Buy One, Get One Free now. This offer won't last.</p>
+            <p class="sp-meta">132 ads · 10% across two variants · the only copy addressing the two-unit problem</p>
+          </div>
+        </div>
+
+        <div class="finding cobalt">
+          <span class="f-tag">Finding · opportunity</span>
+          <h3>The sharpest claim is the least-used</h3>
+          <p><strong>“They Have 132 LEDs. We Have 320.”</strong> is the only headline Solawave runs that makes a falsifiable, competitor-relative claim — and the hardest one for a rival to answer. It runs on 135 ads (10%) and one recent variant is trending up while sibling creatives trend flat or down. In a category where every brand claims “clinic-grade”, a specific number that beats a named competitor's spec is the cheapest trust available.</p>
+          <p class="ev"><strong>Evidence</strong> — 135 ads, longest run 40 days. Comparison theme on 162 ads (12%). Supporting spec claims already in rotation: 320 medical-grade LEDs (219), 4 clinic-grade wavelengths (261), FDA-cleared (265).</p>
+        </div>
+
+        <div class="finding cobalt">
+          <span class="f-tag">Finding · opportunity</span>
+          <h3>726,000 customers, used in 9% of ads</h3>
+          <p>Solawave's copy cites 726,000+ customers, a 4.7-star average and a 60-day money-back guarantee — the three assets a $399 considered purchase most needs. Testimonial ads are 5% of the account and social proof 9%, while feature-listing runs at 75%. Before-and-after — the money shot of this category — is on 13%. The proof exists; it is not being put in front of people at scale.</p>
+          <p class="ev"><strong>Evidence</strong> — Testimonial 72 (5.2%) · Social proof 126 (9.1%) · Before &amp; after 186 (13.4%) · Media/press 81 (5.8%) · Features/benefits 1,044 (75.3%). Guarantee-led headline on 46 ads (3.3%).</p>
+        </div>
+      </section>
+
+      <!-- 08 -->
+      <section class="section" id="audience" style="--accent:var(--magenta)">
+        <div class="section-head">
+          <p class="section-label">08 · Who they buy</p>
+          <h2>One woman, described five ways</h2>
+          <p class="section-lead">The top five personas account for 1,651 tags. Every genuinely distinct audience — the time-poor professional, the value shopper, the health optimiser — sits in the tail, at a 12:1 ratio.</p>
+        </div>
+        <div class="bars">
+          <div class="bar"><span class="bl">Results-Oriented Self-Care Practitioner</span><span class="bt"><i class="dim" style="width:100%"></i></span><span class="bv">430</span></div>
+          <div class="bar"><span class="bl">The Preventative Beauty Seeker</span><span class="bt"><i class="dim" style="width:86.3%"></i></span><span class="bv">371</span></div>
+          <div class="bar"><span class="bl">The Results Seeker</span><span class="bt"><i class="dim" style="width:72.6%"></i></span><span class="bv">312</span></div>
+          <div class="bar"><span class="bl">Effortless Beauty Seeker</span><span class="bt"><i class="dim" style="width:69.3%"></i></span><span class="bv">298</span></div>
+          <div class="bar"><span class="bl">Self-Care Seeker</span><span class="bt"><i class="dim" style="width:55.8%"></i></span><span class="bv">240</span></div>
+          <div class="bar"><span class="bl">The Time-Starved Achiever<em>distinct · under-served</em></span><span class="bt"><i class="lime" style="width:9.3%"></i></span><span class="bv">40</span></div>
+          <div class="bar"><span class="bl">The Value-Conscious Beauty Seeker<em>distinct · under-served</em></span><span class="bt"><i class="lime" style="width:8.6%"></i></span><span class="bv">37</span></div>
+          <div class="bar"><span class="bl">The Wellness Seeker<em>distinct · under-served</em></span><span class="bt"><i class="lime" style="width:7.4%"></i></span><span class="bv">32</span></div>
+          <div class="bar"><span class="bl">The Health Optimizer<em>distinct · under-served</em></span><span class="bt"><i class="lime" style="width:5.1%"></i></span><span class="bv">22</span></div>
+          <div class="bar"><span class="bl">The Mindful Optimizer</span><span class="bt"><i class="lime" style="width:1.4%"></i></span><span class="bv">6</span></div>
+          <p class="axis">Persona tags across 1,386 live ads; bars scaled to the largest (430).</p>
+        </div>
+
+        <div class="finding magenta">
+          <span class="f-tag">Finding · watch</span>
+          <h3>Every ad plays the same three emotional notes</h3>
+          <p>Confidence appears in 87% of ads, Hope in 74%, Satisfaction in 70%. The next-largest emotion — Excitement — reaches 12%. Curiosity sits at 6%, Relief at 4%. For a category sold on a visible physical transformation, the absence of relief, vindication and mild loss-aversion is conspicuous. The “after 40, your skin stops responding — that's not a willpower problem, that's biology” angle is the one piece of copy reaching for a different register, and it is barely deployed.</p>
+          <p class="ev"><strong>Evidence</strong> — Confidence 1,213 · Hope 1,019 · Satisfaction 971 · Excitement 167 · Happy 125 · Trust 116 · Curiosity 81 · Joy 73 · Relief 51 · Inspiration 35.</p>
+        </div>
+
+        <div class="finding yellow">
+          <span class="f-tag">Finding · watch</span>
+          <h3>Solawave sells a gift and never buys the gift-giver</h3>
+          <p>“Give someone you love the gift of real results”, “one for you, one for a friend”, “mix and match, gift one, keep both” — the BOGO mechanic is explicitly a two-person purchase, and it is the account's dominant message. Yet no persona in the top ten is a gift buyer, and none of the four core copy blocks is written from the giver's point of view. The second unit is being justified after the click rather than sold before it.</p>
+          <p class="ev"><strong>Evidence</strong> — “Gift the second one” copy on 132 ads (10%) vs. BOGO-headlined ads on 466 (34%). No gift-recipient persona in the top ten by tag volume.</p>
+        </div>
+
+        <div class="finding lime">
+          <span class="f-tag">Finding · opportunity</span>
+          <h3>HSA/FSA is the most under-used purchase unlock</h3>
+          <p>Two ads in the current top twenty lead with “Use Your HSA/FSA. Buy One, Get One.” — and HSA/FSA eligibility turns a $399 discretionary spend into pre-tax spend, a far stronger lever than 30% off for the Health Optimiser and Wellness Seeker segments now sitting at 22 and 32 tags. The brand has run this seasonally — a December 2025 “don't lose your 2024 HSA/FSA dollars” flight, 54 days — but never as evergreen.</p>
+          <p class="ev"><strong>Evidence</strong> — HSA/FSA cited in Neck &amp; Chest Pro copy (“726,000+ customers. 4.7 stars. HSA/FSA eligible.”). Prior flight: 54-day run from 2025-12-30 on the deals collection.</p>
+        </div>
+      </section>
+
+      <!-- 09 -->
+      <section class="section" id="pages" style="--accent:var(--yellow)">
+        <div class="section-head">
+          <p class="section-label">09 · Landing pages</p>
+          <h2>Where 1,386 ads send people</h2>
+          <p class="section-lead">Thirty-five distinct destinations. Three matter. The first absorbs three-quarters of all traffic through four different URLs; the second carries a Black Friday slug in September; the third is a dead Labor Day deployment still serving a contradictory offer.</p>
+        </div>
+        <div class="tblwrap">
+          <table class="lptable">
+            <thead><tr><th>Destination</th><th>Ads</th><th>Share</th><th>Longest run</th><th>State</th></tr></thead>
+            <tbody>
+              <tr><td>Wrinkle Retreat Pro PDP<span class="u">/products/wrinkle-retreat-pro-red-light-therapy-led-face-mask-infrared-fda-cleared</span></td><td>738</td><td>53.3%</td><td>80 d</td><td><span class="pill ok">Primary</span></td></tr>
+              <tr><td>— same PDP, short slug<span class="u">/products/wrinkle-retreat-pro-red-light-therapy</span></td><td>142</td><td>10.2%</td><td>24 d</td><td><span class="pill bad">Split</span></td></tr>
+              <tr><td>— same PDP, browser flag<span class="u">…-fda-cleared?openExternalBrowser=1</span></td><td>128</td><td>9.2%</td><td>101 d</td><td><span class="pill bad">Split</span></td></tr>
+              <tr><td>— same PDP, legacy slug<span class="u">/products/wrinkle-retreat-pro-light-therapy-face-mask</span></td><td>46</td><td>3.3%</td><td>146 d</td><td><span class="pill bad">Split</span></td></tr>
+              <tr><td>Black Friday deals collection<span class="u">/collections/black-friday-skincare-deals-red-light-therapy-solawave</span></td><td>92</td><td>6.6%</td><td>41 d</td><td><span class="pill warn">Mismatched</span></td></tr>
+              <tr><td>Homepage + BOGO26 links<span class="u">solawave.co/ · /?utm_id=BOGO26 · /discount/BOGO26</span></td><td>118</td><td>8.5%</td><td>84 d</td><td><span class="pill warn">Diffuse</span></td></tr>
+              <tr><td>Light therapy devices collection<span class="u">/collections/light-therapy-devices</span></td><td>23</td><td>1.7%</td><td>63 d</td><td><span class="pill ok">Healthy</span></td></tr>
+              <tr><td>Radiant Renewal Wand PDP<span class="u">/products/radiant-renewal-skincare-wand-with-red-light-therapy</span></td><td>21</td><td>1.5%</td><td>62 d</td><td><span class="pill ok">Healthy</span></td></tr>
+              <tr><td>Labor Day Sale 2026<span class="u">get.solawave.co/labor-day-sale-2026-red-light-therapy</span></td><td>18</td><td>1.3%</td><td>5 d</td><td><span class="pill bad">Orphaned</span></td></tr>
+              <tr><td>Neck &amp; Chest Pro PDP<span class="u">/products/neck-chest-pro-light-therapy-mask</span></td><td>14</td><td>1.0%</td><td>21 d</td><td><span class="pill ok">Healthy</span></td></tr>
+              <tr><td>All remaining destinations<span class="u">25 further URLs incl. /pages/your-own-terms, /why-both-masks, Bye Acne PDP</span></td><td>46</td><td>3.3%</td><td>50 d</td><td><span class="pill warn">Long tail</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="finding">
+          <span class="f-tag">LP 01 · critical</span>
+          <h3>One product page, four URLs, four learning pools</h3>
+          <p>1,054 ads — 76% of everything Solawave runs — land on the Wrinkle Retreat Pro product page, arriving through four different URL spellings: the canonical FDA-cleared slug (738), a short slug (142), an <code>?openExternalBrowser=1</code> variant (128) and a legacy slug (46). Two further parameterised variants add a handful more.</p>
+          <p>Meta treats these as distinct destinations for Advantage+ optimisation, and on-site A/B tooling treats them as distinct entry points. The most important page in the business is being tested four ways at once and none of the four reaches significance. Any PDP change — a hero swap, a new proof module, a price test — is measured against a quarter of the traffic it should be.</p>
+          <p class="ev"><strong>Evidence</strong> — 738 + 142 + 128 + 46 = 1,054 (76.0%) resolving to the same product. Longest continuous run differs by variant: 80 d, 24 d, 101 d, 146 d.</p>
+        </div>
+
+        <div class="finding yellow">
+          <span class="f-tag">LP 02 · watch</span>
+          <h3>A Black Friday page running in September</h3>
+          <p>The <code>/collections/black-friday-skincare-deals-red-light-therapy-solawave</code> collection takes 92 ads (6.6%) and has been in continuous use for 41 days. It functions as the brand's permanent deals page — but it wears a Black Friday slug in September, and the ads pointing at it carry BOGO, “Prime Sale” and post-40 biology copy with nothing to do with Black Friday.</p>
+          <p>Two costs. The slug is visible in the link preview and the browser bar, so an off-season promotional URL undercuts the “limited time” framing of the ad that sent them. And Solawave is burning its actual Black Friday asset eleven weeks early: when the event arrives the page has no novelty, no fresh index signal, and a cohort who already saw its “biggest sale ever”.</p>
+          <p class="ev"><strong>Evidence</strong> — 92 live ads (95 in tagged scope), longest run 41 days, in continuous use since a 2025-12-30 HSA/FSA flight. Current headlines landing there: “Buy One, Get Another FREE”, “BUY ONE, GET ONE — Join 700k Happy Users”, “They Have 132 LEDs. We Have 320.”</p>
+        </div>
+
+        <div class="finding">
+          <span class="f-tag">LP 03 · critical</span>
+          <h3>The Labor Day page launched early, ran one day, still serves the wrong offer</h3>
+          <p>All 18 ads pointing at <code>get.solawave.co/labor-day-sale-2026-red-light-therapy</code> launched on 5 September 2026 — two days ahead of the holiday. Each records roughly one day of run time. Their ranks land between 33 and 127 in pools of 147 to 168, so this cohort sat in the bottom half of the account for its entire life while the BOGO wave launched three days later took every one of the top nineteen slots.</p>
+          <p>The page is orphaned: the account pivoted to BOGO on 8 September, but these ads still carry “🚨 30% OFF + FREE GIFT” and still show active. This is the offer conflict in section 06, and the fix is a five-minute pause rather than a strategy change.</p>
+          <p class="ev"><strong>Evidence</strong> — 18 ads, all start_date 2026-09-05, all days_running 1, all status active as of 2026-09-10. Best rank in cohort 33/168; worst 127/168. Labor Day 2026 fell on 7 September.</p>
+        </div>
+
+        <div class="finding lime">
+          <span class="f-tag">LP 04 · opportunity</span>
+          <h3>The page built for the actual objection gets six ads</h3>
+          <p><code>get.solawave.co/why-both-masks</code> — an advertorial answering why a buyer should take the face mask <em>and</em> the neck &amp; chest mask — is the only destination purpose-built to justify the second unit BOGO forces on every buyer. It runs on six ads. Meanwhile 466 ads promise a second mask and send people to a single-product PDP that has to solve that objection in its cart.</p>
+          <p class="ev"><strong>Evidence</strong> — <code>/why-both-masks</code>: 6 ads, 2 days longest run. Supporting creative already written and live at rank 17: “Your face has SPF, serum, and a whole routine. Your neck and chest? They get the same sun — and most routines stop at the jawline.”</p>
+        </div>
+      </section>
+
+      <!-- 10 -->
+      <section class="section" id="plan" style="--accent:var(--lime)">
+        <div class="section-head">
+          <p class="section-label">10 · The plan</p>
+          <h2>Ninety days, no extra production</h2>
+          <p class="section-lead">Solawave already makes enough creative. Every play redirects existing capacity rather than asking for more, and each names the number it should move.</p>
+        </div>
+        <div class="plan">
+          <div class="play" style="--accent:var(--coral)">
+            <p class="pl-when">This week · critical</p>
+            <h3>Kill the offer conflict</h3>
+            <ul>
+              <li>Pause all 18 Labor Day ads and redirect <strong>get.solawave.co/labor-day-sale-2026</strong> to the live BOGO destination.</li>
+              <li>Audit for any other live flight quoting a percentage discount. The account should quote exactly one price at any moment.</li>
+            </ul>
+            <p class="pl-metric">Moves offer discipline <strong>2 → 5</strong>. Watch blended CAC and return rate on orders sourced from the two conflicting flights.</p>
+          </div>
+          <div class="play" style="--accent:var(--coral)">
+            <p class="pl-when">This week · critical</p>
+            <h3>Collapse the PDP to one URL</h3>
+            <ul>
+              <li>Pick the canonical FDA-cleared slug; <strong>301 the short and legacy slugs</strong> to it.</li>
+              <li>Rebuild the <strong>?openExternalBrowser=1</strong> cohort on the canonical URL with the flag preserved as a parameter, not a separate destination.</li>
+              <li>Re-point all 1,054 ads. This is a bulk edit, not a rebuild.</li>
+            </ul>
+            <p class="pl-metric">Moves traffic architecture <strong>3 → 7</strong>. PDP conversion-rate confidence intervals should tighten within two weeks at 4× the sample.</p>
+          </div>
+          <div class="play" style="--accent:var(--yellow)">
+            <p class="pl-when">Weeks 2–6 · critical</p>
+            <h3>Retire “biggest sale ever”, build a three-rung ladder</h3>
+            <ul>
+              <li><strong>Evergreen rung:</strong> no discount. Lead with the 60-day guarantee — the headline already exists and runs on only 46 ads. Risk reversal replaces price reversal.</li>
+              <li><strong>Value rung:</strong> HSA/FSA as a year-round pre-tax mechanic, not a December flight. Lowers effective price without touching list price.</li>
+              <li><strong>Event rung:</strong> reserve BOGO and the word “biggest” for two windows a year. Black Friday is eleven weeks out and currently has nothing left to say.</li>
+            </ul>
+            <p class="pl-metric">Moves offer discipline <strong>5 → 8</strong> and margin per order. Watch contribution margin, not ROAS — ROAS will look worse before it looks right.</p>
+          </div>
+          <div class="play" style="--accent:var(--cobalt)">
+            <p class="pl-when">Weeks 2–6 · opportunity</p>
+            <h3>Scale the comparison claim</h3>
+            <ul>
+              <li>Take <strong>“They Have 132 LEDs. We Have 320.”</strong> from 10% to 30% of live ads.</li>
+              <li>Extend the falsifiable-spec treatment to the other three claims already in rotation: 4 wavelengths, FDA clearance, 3-minute session length.</li>
+              <li>Build the side-by-side spec table as a static — the format the claim wants, and the one the account barely runs (6 carousels in 90 days).</li>
+            </ul>
+            <p class="pl-metric">Moves message diversity <strong>3 → 5</strong>. Watch CTR and post-click bounce against the feature-listing baseline.</p>
+          </div>
+          <div class="play" style="--accent:var(--lime)">
+            <p class="pl-when">Weeks 6–12 · opportunity</p>
+            <h3>Buy the gift-giver directly</h3>
+            <ul>
+              <li>Write BOGO copy from the giver's side — mother and daughter, sisters, a friend group splitting the cost.</li>
+              <li>Point it at <strong>/why-both-masks</strong>, which already exists and currently carries six ads.</li>
+              <li>Cheapest available AOV lever: the offer already forces two units and nothing in the funnel sells the second one.</li>
+            </ul>
+            <p class="pl-metric">Moves audience breadth <strong>3 → 5</strong> and AOV. Watch units per order and second-unit gifting-address rate.</p>
+          </div>
+          <div class="play" style="--accent:var(--magenta)">
+            <p class="pl-when">Weeks 6–12 · opportunity</p>
+            <h3>Put the proof in front of people</h3>
+            <ul>
+              <li>Take testimonial and before/after from 5% and 13% to <strong>20% each</strong>, reallocating from the 75% feature-listing block.</li>
+              <li>Lead with the two numbers already in the copy — <strong>726,000 customers, 4.7 stars</strong> — as the creative, not the footnote.</li>
+              <li>Rebuild the clean-beauty advertorial that held for 105 days, and widen the emotional range past Confidence, Hope and Satisfaction.</li>
+            </ul>
+            <p class="pl-metric">Moves proof deployment <strong>4 → 7</strong>. Watch thumb-stop rate on before/after vs. feature creative, and first-purchase conversion on cold.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 11 -->
+      <section class="section" id="method" style="--accent:var(--cobalt)">
+        <div class="section-head">
+          <p class="section-label">11 · Method</p>
+          <h2>Method &amp; limits</h2>
+          <p class="section-lead">Every figure here comes from ads Solawave ran publicly on Meta between 13 June and 10 September 2026, observed through the Meta Ad Library and enriched with Atria's creative tagging. The window covers 1,386 live ads against an all-time library of 12,016.</p>
+        </div>
+        <div class="defs">
+          <div class="def">
+            <p class="dnum">01 — What the data is</p>
+            <h3>Delivery weight, not performance</h3>
+            <p><strong>Impression rank</strong> is Meta's relative ordering of an advertiser's own ads by delivery. It says which ads Solawave put weight behind, not what those ads earned. Creative tags — theme, persona, emotion, angle, USP — are model-assigned and multi-label, so shares within a dimension sum above 100%. Coverage varies by field: hook tagging is based on 556 ads, copy and landing-page tagging on all 1,386.</p>
+          </div>
+          <div class="def">
+            <p class="dnum">02 — How the cohort was ranked</p>
+            <h3>Endurance, not engagement</h3>
+            <p>Section 05 ranks ads by <strong>continuous observed run length</strong> among creatives active between 1 May and 10 Sep 2026, deduplicated to one row per distinct creative. Run length stands in for endurance because renewal is the advertiser's own verdict on a creative. <strong>Per-ad like, comment and share counts are not available through this source</strong>, so no engagement figure is quoted anywhere on this page. Ranking the same window by delivery weight instead returns the 8 September BOGO wave — a different list, the same conclusion.</p>
+          </div>
+          <div class="def">
+            <p class="dnum">03 — What the data is not</p>
+            <h3>No spend, no revenue</h3>
+            <p>No spend, revenue, ROAS, CAC or conversion figure here is observed — none of it is public. Claims about margin and offer economics are inference from observed creative behaviour and should be checked against Solawave's own ad-account data before budget moves. Landing-page commentary is drawn from the URLs, slugs and the ad copy pointing at them; <strong>the pages themselves were not crawled</strong> — solawave.co is blocked by this session's network egress proxy.</p>
+          </div>
+          <div class="def">
+            <p class="dnum">04 — Missing assets</p>
+            <h3>Creative files pending</h3>
+            <p>The image and video files are hosted on <code>cdn.tryatria.com</code>, which this session's egress proxy also blocks, so they could not be downloaded and published with this page. Every ad card links to its creative and its Meta Ad Library entry. The accompanying <code>fetch-solawave-creative.sh</code> pulls all <strong>38 assets</strong> — 4 videos with posters, 30 statics — from any machine with normal access.</p>
+          </div>
+          <div class="def">
+            <p class="dnum">05 — Typography</p>
+            <h3>PP Mori substituted</h3>
+            <p>This page is built to the reference deep-dive's design system. <strong>PP Mori</strong> is a commercial Pangram Pangram face that is not on Google Fonts and could not be fetched here, so <strong>Archivo</strong> stands in at the same weights. “PP Mori” remains first in every font stack — self-host the two <code>.otf</code> files and the page picks them up with no other change. Space Mono is the reference face exactly.</p>
+          </div>
+          <div class="def">
+            <p class="dnum">06 — Reference</p>
+            <h3>Design lineage</h3>
+            <p>Palette, type scale, layout grid and component set are replicated from the Spacegoods / Rosabella Meta deep-dive template: oklch warm-ivory ground with coral, cobalt, lime, yellow and magenta section accents; 1,380px shell; sticky numbered run-order rail; per-section accent inheritance.</p>
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <div><strong>Solawave · Meta deep-dive</strong><br>Advertiser m153689201309487 · 32,683 page likes · 12,016 ads all-time</div>
+        <div>Window 13 Jun – 10 Sep 2026<br>Data as of 2026-09-10 20:24 UTC</div>
+        <div>Source: Meta Ad Library via Atria<br>Impression rank is delivery weight, not performance</div>
+        <div><a href="#top">↑ Back to top</a></div>
+      </footer>
+
+    </main>
+  </div>
+</div>
+
+<script>
+const CDN = "https://cdn.tryatria.com/adfiles/";
+const AL  = "https://www.facebook.com/ads/library/?id=";
+const BOGO = "🚨 OUR BIGGEST SALE EVER — LIVE NOW 🚨\nBuy One, Get One FREE on our best-selling LED Face Mask and skincare tools. This is the easiest way to glow brighter, lift your skin, and give someone you love the gift of real results ✨";
+const BOGO_S = "🚨 OUR BIGGEST SALE EVER — LIVE NOW 🚨\nBuy One, Get One FREE on our best-selling LED Face Mask and skincare tools…";
+const OFFER_YR = "🚨 Our biggest offer of the year is live.\nBuy One Wrinkle Retreat Pro, Get One FREE — for a limited time.\n4 wavelengths. 320 LEDs. 3 minutes. Real results.\nGive the gift of actually working skincare.\n→ Shop now before it ends.";
+const DEAL = "This is the deal your skin (and your best friend's skin) has been waiting for. 🖤\nLimited Time: Buy One Wrinkle Retreat Pro, Get One FREE.\nMix and match. Gift one. Keep both. Whatever you choose — you're getting clinical-grade red light therapy that visibly reduces fine lines in just 3 minutes a day.\nFDA-cleared · 726,000+ customers · 60-day guarantee";
+const SERUMS = "You've tried the serums. The facials. The $90 eye creams that promised everything and delivered nothing.\n\nHere's the difference: Solawave uses 320 high-power LEDs across 4 wavelengths. The same red light technology your dermatologist uses. FDA-cleared. 3 minutes a day.\n\nRight now: Buy One, Get One Free. One for you, one for a friend.\n\nNot happy after 60 days? Full refund. No questions.\n\nStop renting results. Start owning them.";
+
+const board = [
+ {r:1,  id:"m2273868280026988", hl:"Buy One, Get One FREE ✨", fmt:"Image", img:"m2273868280026988_H2jIgBJA8Uw.jpeg", copy:BOGO, themes:"Scarcity · Discount", dest:"homepage ?utm_id=BOGO26", run:"2 d"},
+ {r:2,  id:"m1819157329075023", hl:"Professional Results. Your Schedule.", fmt:"Video 47s", img:"m1819157329075023_yh6jp5XIEuc.jpeg", vid:"m1819157329075023_STTFJ6FB4iU.mp4", copy:"What if spa-quality skin treatments could happen during your morning coffee?\n\nThe Solawave 4-in-1 Wand brings red light therapy, galvanic current, therapeutic warmth, and facial massage into one device — 12 minutes per area, in your bathroom, on your schedule. No appointments. No waiting rooms.\n\nDermatologist-approved. Loved by 726,000+ customers. HSA/FSA eligible.\n\nYour skin. Your terms.", themes:"Partner ad · no offer · the only one", dest:"Radiant Renewal Wand PDP", run:"1 d"},
+ {r:3,  id:"m3013428942340718", hl:"Buy One, Get One FREE ✨", fmt:"Image", img:"m3013428942340718_EyHziYjMkw0.jpeg", copy:BOGO_S, themes:"Discount · Features", dest:"PDP ?openExternalBrowser=1", run:"0 d"},
+ {r:4,  id:"m2327044811444618", hl:"Buy One, Get One FREE ✨", fmt:"Image", img:"m2327044811444618_I2AJV3lKeB8.jpeg", copy:BOGO_S, themes:"Discount · Features · Showcase", dest:"PDP ?openExternalBrowser=1", run:"2 d"},
+ {r:5,  id:"m1064029393298294", hl:"Buy One, Get One FREE ✨", fmt:"Image", img:"m1064029393298294_seABWecgBpE.jpeg", copy:BOGO_S, themes:"Discount · Features", dest:"Light therapy devices collection", run:"2 d"},
+ {r:6,  id:"m2061919934690748", hl:"Buy One, Get One FREE ✨", fmt:"Image", img:"m2061919934690748_ii25wMgjSgM.jpeg", copy:BOGO_S, themes:"Discount · Features", dest:"PDP ?openExternalBrowser=1", run:"2 d"},
+ {r:7,  id:"m1695610461507530", hl:"Buy One, Get One FREE ✨", fmt:"Image · 10 dupes", img:"m1695610461507530_qh2XYdrMBEA.jpeg", copy:BOGO_S, themes:"Features · Discount", dest:"homepage ?utm_id=BOGO26", run:"1 d"},
+ {r:8,  id:"m2190585924834484", hl:"Buy One, Get One FREE ✨", fmt:"Video 21s", img:"m2190585924834484_pfUMMwm7Isc.jpeg", vid:"m2190585924834484_PXl5N3eep0E.mp4", copy:OFFER_YR, themes:"Features · Problem/solution · Discount", dest:"canonical PDP", run:"2 d"},
+ {r:9,  id:"m1076283625272595", hl:"Buy One, Get One FREE ✨", fmt:"Image", img:"m1076283625272595_qToWvm_8qBU.jpeg", copy:BOGO_S, themes:"Discount · Features · Problem/solution", dest:"PDP ?openExternalBrowser=1", run:"2 d"},
+ {r:10, id:"m2329913234213113", hl:"Buy One, Get One FREE ✨", fmt:"Image", img:"m2329913234213113_j7sjv3t7uqc.jpeg", copy:DEAL, themes:"Discount · Scarcity", dest:"canonical PDP", run:"2 d"},
+ {r:11, id:"m2057492978205451", hl:"Buy One, Get One FREE ✨", fmt:"Image", img:"m2057492978205451_YutXUc5oy_U.jpeg", copy:BOGO_S, themes:"Comparison · Media/Press · Features", dest:"homepage ?utm_id=BOGO26", run:"1 d"},
+ {r:12, id:"m28389618090648018", hl:"Buy One, Get One FREE ✨", fmt:"Carousel", img:"m28389618090648018_FLBuFq7XYdA.jpeg", copy:"", themes:"Discount · Features", dest:"PDP ?openExternalBrowser=1", run:"0 d"},
+ {r:13, id:"m1395701358750362", hl:"Buy One, Get One FREE ✨", fmt:"Image · 6 dupes", img:"m1395701358750362_WWaJujV-Sn0.jpeg", copy:DEAL, themes:"Discount · Scarcity · Features", dest:"canonical PDP", run:"2 d"},
+ {r:14, id:"m2277694609721107", hl:"Buy One, Get One FREE ✨", fmt:"Image", img:"m2277694609721107_G_UzjvtESjk.jpeg", copy:BOGO_S, themes:"Discount · Problem/solution · Scarcity", dest:"PDP ?openExternalBrowser=1", run:"2 d"},
+ {r:15, id:"m3234376376760969", hl:"Buy One, Get One FREE ✨", fmt:"Video 29s", img:"m3234376376760969_lflAGYkRTGA.jpeg", copy:OFFER_YR, themes:"—", dest:"PDP short slug", run:"2 d"},
+ {r:16, id:"m1596866991815176", hl:"They Have 132 LEDs. We Have 320.", fmt:"Video 15s", img:"m1596866991815176_3hFKOFzGcys.jpeg", vid:"m1596866991815176_9D1epR-96Ig.mp4", copy:SERUMS, themes:"Problem/solution · Features · Discount", dest:"Black Friday collection", run:"0 d"},
+ {r:17, id:"m1092314213149049", hl:"They Have 132 LEDs. We Have 320.", fmt:"Image", img:"m1092314213149049_HGfIbN4NjnM.jpeg", copy:"Your face has SPF, serum, and a whole routine.\n\nYour neck and chest? They get the same sun — and most routines stop at the jawline.\n\nThe Solawave Neck & Chest Pro Mask changes that. 4 wavelengths. 320 LEDs. 3 hands-free minutes.\n\n726,000+ customers. 4.7 stars. HSA/FSA eligible.\n\nBuy one, get one free — limited time.", themes:"Features · Discount", dest:"Neck & Chest Pro PDP", run:"2 d"},
+ {r:18, id:"m1436992331629552", hl:"Buy One, Get One FREE ✨", fmt:"Video 33s", img:"m1436992331629552_GuGo-2BvPTU.jpeg", vid:"m1436992331629552_zimS-4a0IzY.mp4", copy:OFFER_YR, themes:"Before & after · Features · Problem/solution", dest:"PDP short slug", run:"2 d"},
+ {r:19, id:"m1092716883652989", hl:"Buy One, Get One FREE ✨", fmt:"Image", img:"m1092716883652989_CltqVqvQBFo.jpeg", copy:BOGO_S, themes:"Media/Press · Discount", dest:"homepage ?utm_id=BOGO26", run:"0 d"},
+ {r:20, id:"m2080232923367310", hl:"Use Your HSA/FSA. Buy One, Get One.", fmt:"Image", img:"m2080232923367310_glbWEeq26eU.jpeg", copy:"You've probably tried something for your neck.\n\nA firming cream. A collagen serum applied a little lower than usual. Maybe a gua sha or a roller that promised to “lift and tighten.”\n\nAnd you've probably noticed that nothing quite delivers.\n\nThe Solawave Neck & Chest Pro Light Therapy Mask is different. It was built for this.", themes:"Before & after · Comparison", dest:"/why-both-masks", run:"1 d"}
+];
+
+const endurance = [
+ {r:1,  id:"m2010645566183162", hl:"Buy One, Get One FREE ✨", fmt:"Image · 6 dupes", img:"m2010645566183162_yjUJDdKl0e8.jpeg", run:"143 d", rank:"1 / 120", from:"17 Apr", dest:"legacy slug", note:"The account's longest-running ad. Preventative Beauty Seeker.", copy:BOGO},
+ {r:2,  id:"m1516120826574143", hl:"Buy One, Get One FREE ✨", fmt:"Image · 5 dupes", img:"m1516120826574143_px3zqEfXaIo.jpeg", run:"143 d", rank:"4 / 120", from:"17 Apr", dest:"legacy slug", note:"Effortless Beauty Seeker — 3-minute, hands-free, portable, affordable.", copy:BOGO_S},
+ {r:3,  id:"m868648829597072", hl:"Buy One, Get One FREE ✨", fmt:"Image · partner", img:"m868648829597072_Pppsc-Pw8Og.jpeg", run:"133 d", rank:"19 / 74", from:"26 Apr", dest:"legacy slug", note:"PARTNER — house copy in third person: “their best-selling”.", copy:"🚨 SOLAWAVE'S BIGGEST SALE EVER — LIVE NOW 🚨\nBuy One, Get One FREE on their best-selling LED Face Mask and skincare tools. This is the easiest way to glow brighter, lift your skin, and give someone you love the gift of real results ✨"},
+ {r:4,  id:"m972674411869940", hl:"Buy One, Get One FREE ✨", fmt:"Image · partner", img:"m972674411869940_VwfuVPNNBRo.jpeg", run:"133 d", rank:"28 / 74", from:"26 Apr", dest:"legacy slug", note:"PARTNER — second creator variant of the same third-person copy.", copy:"🚨 SOLAWAVE'S BIGGEST SALE EVER — LIVE NOW 🚨\nBuy One, Get One FREE on their best-selling LED Face Mask and skincare tools…"},
+ {r:5,  id:"m1715053516322806", hl:"Buy One, Get One FREE ✨", fmt:"Image · advertorial", img:"m1715053516322806__JnLbVTLfZY.jpeg", run:"105 d", rank:"26 / 150", from:"ended 8 Aug", dest:"legacy slug", note:"THE OUTLIER — 1,797 chars, ran from a 7.2M-like media page. The only Health Optimizer ad. Retired, never replaced.", copy:"#ad Here's an experiment. Go to your bathroom right now and flip over your “clean” moisturizer.\n\nCount the ingredients. We'll wait.\n\nIf you're like most health-conscious women, you've already eliminated processed food from your kitchen, filtered your water, switched to natural deodorant, and scrutinized every label at the grocery store.\n\nYou know what goes into your body matters. But then you walk into your bathroom and layer on 6 to 12 products — each with its own cocktail of synthetic compounds — directly onto the most absorbent organ you have.\n\nYour skin already knows how to produce collagen. It doesn't need another ingredient. It needs a signal.\n\nThe ingredient list is one word long: light."},
+ {r:6,  id:"m2293693391435643", hl:"Buy One, Get One FREE ✨", fmt:"Image · 4 dupes", img:"m2293693391435643_7I9SRSvPsnM.jpeg", run:"101 d", rank:"41 / 150", from:"ended 4 Aug", dest:"browser flag", note:"“While you do literally anything”. The Health Optimizer.", copy:BOGO_S},
+ {r:7,  id:"m979491831134468", hl:"Buy One, Get One FREE ✨", fmt:"Image · 10 dupes", img:"m979491831134468_vwULbzK6SBs.jpeg", run:"98 d", rank:"12 / 130", from:"ended 1 Aug", dest:"browser flag", note:"Most-reused creative in the cohort. Four wavelengths, reduces wrinkles.", copy:BOGO_S},
+ {r:8,  id:"m981281627966001", hl:"Buy One, Get One FREE ✨", fmt:"Image", img:"m981281627966001_zAqqEwteXtQ.jpeg", run:"97 d", rank:"2 / 120", from:"2 Jun", dest:"browser flag", note:"Widest USP stack — near-infrared, inflammation, lasting results.", copy:BOGO_S},
+ {r:9,  id:"m2157660268404759", hl:"Buy One, Get One FREE ✨", fmt:"Image", img:"m2157660268404759_3lFG9-xvwXw.jpeg", run:"97 d", rank:"22 / 130", from:"ended 31 Jul", dest:"legacy slug", note:"Pure showcase — the only single-theme ad, and the only one carrying Awe.", copy:BOGO_S},
+ {r:10, id:"m979776775033990", hl:"Buy One, Get One FREE ✨", fmt:"Image", img:"m979776775033990_MARPMSBR59g.jpeg", run:"94 d", rank:"5 / 120", from:"5 Jun", dest:"browser flag", note:"Self-care routine framing, three-minute sessions.", copy:BOGO_S}
+];
+
+function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+
+function card(a, mode){
+  const isVid = !!a.vid;
+  const links = [
+    '<a href="'+CDN+a.img+'" target="_blank" rel="noopener">'+(isVid?"Poster":"Image")+'</a>',
+    isVid ? '<a href="'+CDN+a.vid+'" target="_blank" rel="noopener">MP4</a>' : "",
+    '<a href="'+AL+a.id.slice(1)+'" target="_blank" rel="noopener">Ad library</a>'
+  ].filter(Boolean).join("");
+
+  const meta = mode === "endurance"
+    ? '<span><em>Run</em>'+esc(a.run)+'</span><span><em>Best rank</em>'+esc(a.rank)+'</span><span><em>Launched</em>'+esc(a.from)+'</span><span><em>Dest</em>'+esc(a.dest)+'</span>'
+    : '<span><em>Rank</em>'+a.r+' / 86</span><span><em>Run</em>'+esc(a.run)+'</span><span><em>Dest</em>'+esc(a.dest)+'</span>';
+
+  const note = mode === "endurance" ? '<p class="ac-note">'+esc(a.note)+'</p>' : "";
+  const themes = a.themes ? '<p class="ac-themes">'+esc(a.themes)+'</p>' : "";
+  const copy = a.copy
+    ? '<p class="ac-copy">'+esc(a.copy)+'</p>'
+    : '<p class="ac-copy empty">No body copy on record for this carousel.</p>';
+
+  return '<article class="card" id="ad-'+a.id+'">'
+    + '<span class="ac-rank">'+String(a.r).padStart(2,"0")+'</span>'
+    + '<div class="ac-media"><div class="ac-noimg">'
+      + '<span class="ni-glyph">'+(isVid?"▶":"▣")+'</span>'
+      + '<span>'+(isVid?"Video not embedded":"Image not embedded")+'</span>'
+      + '<span style="opacity:.72">CDN blocked · open below</span>'
+    + '</div><span class="ac-fmt">'+esc(a.fmt)+'</span></div>'
+    + '<div class="ac-body">'
+      + '<p class="ac-headline">'+esc(a.hl)+'</p>'
+      + note + copy + themes
+      + '<div class="ac-meta">'+meta+'</div>'
+      + '<div class="ac-verify">'+links+'</div>'
+    + '</div></article>';
+}
+
+document.getElementById("board-grid").innerHTML = board.map(function(a){return card(a,"board");}).join("");
+document.getElementById("endurance-grid").innerHTML = endurance.map(function(a){return card(a,"endurance");}).join("");
+</script>
+
+</body></html>
